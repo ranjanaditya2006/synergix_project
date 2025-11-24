@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Marketplace — Waste2Worth (RDF)</title>
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- GSAP for subtle animations (keeps behavior similar to Home) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <style>
+    :root{
+      --accent:#16a34a;
+      --muted:#6b7280;
+      --card-bg:rgba(255,255,255,0.96);
+    }
+
+    /* Layout + theme */
+    html,body { overflow-x: hidden; }
+    body {
+      background: linear-gradient(180deg,#f6fbf8 0%, #eef6f4 100%);
+      color: #0f172a;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    main { padding-top:4.5rem; } /* header height */
+
+    /* cards / panels */
+    .card { background:var(--card-bg); border:1px solid rgba(15,23,42,0.04); box-shadow:0 6px 20px rgba(12,18,24,0.06); }
+    .side-panel { background:white; border:1px solid rgba(15,23,42,0.04); box-shadow:0 6px 18px rgba(12,18,24,0.04); }
+    .pill { background: rgba(22,163,74,0.12); color:var(--accent); padding:4px 8px; border-radius:9999px; font-weight:600; font-size:12px; }
+    .btn-primary { background:var(--accent); color:white; }
+    .btn-ghost { background:transparent; border:1px solid rgba(15,23,42,0.06); }
+    .card-img { height:160px; object-fit:cover; border-radius:8px; width:100%; display:block; }
+
+    /* Overlay / filter styling */
+    .overlay-backdrop { position:fixed; inset:0; background:rgba(2,6,23,0.5); z-index:9990; display:none; }
+    .overlay { position:fixed; inset:0; z-index:9991; display:none; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+    .overlay.open, .overlay-backdrop.open { display:block; }
+    .overlay .panel { background:white; max-width:760px; margin:3.5rem auto; border-radius:12px; padding:1.25rem; box-shadow:0 20px 40px rgba(2,6,23,0.2); }
+    .overlay .panel .inner { max-height:calc(100vh - 12rem); overflow-y:auto; padding-right:0.25rem; }
+
+    /* Modal animation */
+    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; z-index:9992; }
+    .modal { position:fixed; left:50%; top:50%; transform:translate(-50%, -50%) translateY(12px) scale(.98); opacity:0; transition: transform .33s cubic-bezier(.2,.9,.2,1), opacity .28s ease; z-index:9999; display:none; }
+    .modal.open { display:block; transform:translate(-50%, -50%) translateY(0) scale(1); opacity:1; }
+    .modal-inner { background:white; border-radius:10px; box-shadow:0 18px 40px rgba(2,6,23,0.25); max-width:920px; width:100%; overflow:hidden; }
+
+    /* responsive helpers */
+    .hidden-on-desktop { display:inline-block; }
+    @media(min-width:1024px){ .hidden-on-desktop{ display:none; } }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- NAVBAR (keeps same structure & animation targets as Home) -->
+<nav class="fixed w-full z-50 bg-white/90 backdrop-blur border-b border-gray-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center gap-3">
+<img class="w-9 h-9 rounded-full bg-green-600 font-bold" src="logos.png" alt="Waste2Worth Logo" />
+        <div class="hidden sm:block">
+          <a href="index.html" id="brandText" class="text-lg font-semibold text-slate-800 leading-none">Waste2Worth</a><br>
+          <small class="text-xs text-slate-500">B2B Circular Marketplace</small>
+        </div>
+        <div class="sm:hidden text-sm font-semibold">Waste2Worth</div>
+      </div>
+
+      <div class="hidden lg:flex items-center gap-6 text-sm" id="navLinks">
+        <a href="index.html" class="nav-link text-slate-700 hover:text-green-600">Home</a>
+        <a href="marketplace.html" class="nav-link text-slate-900 font-semibold">Marketplace</a>
+        <a href="how it works.html" class="nav-link text-slate-700 hover:text-green-600">How it Works</a>
+        <a href="about.html" class="nav-link text-slate-700 hover:text-green-600">About</a>
+        <a href="contact.html" class="nav-link text-slate-700 hover:text-green-600">Contact</a>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="openOverlayBtn" class="px-3 py-2 rounded-md text-sm btn-ghost hidden-on-desktop">Filters</button>
+        <div class="hidden lg:flex items-center gap-3">
+          <a href="buy.html" class="px-3 py-2 rounded-md text-sm btn-ghost">Sell Waste</a>
+          <a href="buy.html" class="px-3 py-2 rounded-md text-sm btn-ghost">Buy</a>
+          <a href="#" class="px-4 py-2 rounded-md text-sm btn-primary hover:opacity-95">Login</a>
+          <a href="dashboard.html" class="ml-3 px-3 py-2 rounded-md text-sm border border-gray-100 bg-white">Dashboard</a>
+        </div>
+        <button id="mobileMenuBtn" aria-label="menu" class="p-2 rounded-md bg-white border border-gray-100 shadow-sm lg:hidden">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Filter overlay (centered panel on mobile / small screens) -->
+<div id="overlayBackdrop" class="overlay-backdrop" aria-hidden="true"></div>
+<div id="filterOverlay" class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="panel" aria-labelledby="filterHeading">
+    <div class="flex items-center justify-between mb-3">
+      <h3 id="filterHeading" class="text-lg font-semibold">Filters</h3>
+      <div class="flex items-center gap-2">
+        <button id="clearOverlayFilters" class="px-3 py-1 rounded-md btn-ghost text-sm">Clear</button>
+        <button id="closeOverlayBtn" class="px-3 py-1 rounded-md btn-ghost text-sm">Close</button>
+      </div>
+    </div>
+
+    <div class="inner">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm text-slate-600 mb-1">Waste Material (RDF feed types)</label>
+          <div id="overlayMaterialFilters" class="grid grid-cols-2 gap-2"></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-sm text-slate-600">Qty min (kg)</label>
+            <input id="ovQMin" type="number" class="w-full px-3 py-2 border rounded-md mt-1" />
+          </div>
+          <div>
+            <label class="text-sm text-slate-600">Qty max (kg)</label>
+            <input id="ovQMax" type="number" class="w-full px-3 py-2 border rounded-md mt-1" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm text-slate-600 mb-1">Location (City / State)</label>
+          <input id="ovLocation" type="text" placeholder="e.g. Delhi, Maharashtra" class="w-full px-3 py-2 border rounded-md" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-sm text-slate-600">Price min (₹/kg)</label>
+            <input id="ovPMin" type="number" class="w-full px-3 py-2 border rounded-md mt-1" />
+          </div>
+          <div>
+            <label class="text-sm text-slate-600">Price max (₹/kg)</label>
+            <input id="ovPMax" type="number" class="w-full px-3 py-2 border rounded-md mt-1" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-sm text-slate-600 mb-1">Seller Verification</label>
+            <select id="ovVerification" class="w-full px-3 py-2 border rounded-md">
+              <option value="any">Any</option>
+              <option value="verified">Verified only</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-sm text-slate-600 mb-1">Availability</label>
+            <select id="ovAvailability" class="w-full px-3 py-2 border rounded-md">
+              <option value="any">Any</option>
+              <option value="in">In stock</option>
+              <option value="out">Out of stock</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button id="applyOverlayFilters" class="flex-1 py-2 rounded-md btn-primary">Apply filters</button>
+          <button id="exportCSVOverlay" class="flex-1 py-2 rounded-md btn-ghost">Export CSV</button>
+        </div>
+
+        <div class="text-xs text-slate-500">Tip: Use AI Suggestion to view an estimated market price.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE CONTENT -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+  <header class="mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-bold">Marketplace</h1>
+      <p class="text-sm text-slate-600 mt-1 max-w-xl">Discover RDF feedstock and other industrial waste. Use filters to narrow results. Click <span class="font-medium text-slate-800">Buy Now</span> or start negotiating with sellers.</p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <div class="text-sm text-slate-500 hidden sm:inline">Showing <span id="resultCount" class="font-semibold">0</span> listings</div>
+      <select id="sortSelect" class="border rounded-md px-3 py-2 text-sm">
+        <option value="newest">Sort: Newest</option>
+        <option value="price-asc">Price: Low → High</option>
+        <option value="price-desc">Price: High → Low</option>
+        <option value="distance">Distance</option>
+      </select>
+      <button id="clearFilters" class="px-3 py-2 text-sm btn-ghost hidden sm:inline">Reset</button>
+    </div>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- desktop filters -->
+    <aside id="desktopFilters" class="hidden lg:block lg:col-span-3 side-panel p-5 rounded-lg sticky top-24 self-start">
+      <h3 class="font-semibold mb-3">Filters</h3>
+
+      <label class="block text-sm text-slate-600 mb-1">Waste Material (RDF feed types)</label>
+      <div id="materialFilters" class="grid grid-cols-2 gap-2 mb-4"></div>
+
+      <label class="block text-sm text-slate-600 mb-1">Quantity (kg)</label>
+      <div class="flex gap-2 mb-4">
+        <input id="qMin" type="number" placeholder="min" class="w-1/2 px-3 py-2 border rounded-md" />
+        <input id="qMax" type="number" placeholder="max" class="w-1/2 px-3 py-2 border rounded-md" />
+      </div>
+
+      <label class="block text-sm text-slate-600 mb-1">Seller Verification</label>
+      <select id="verification" class="w-full px-3 py-2 border rounded-md mb-4">
+        <option value="any">Any</option>
+        <option value="verified">Verified only</option>
+      </select>
+
+      <label class="block text-sm text-slate-600 mb-1">City / State</label>
+      <input id="locationFilter" type="text" placeholder="e.g. Delhi, Maharashtra" class="w-full px-3 py-2 border rounded-md mb-4" />
+
+      <label class="block text-sm text-slate-600 mb-1">Price range (₹ / kg)</label>
+      <div class="flex gap-2 mb-4">
+        <input id="pMin" type="number" placeholder="min" class="w-1/2 px-3 py-2 border rounded-md" />
+        <input id="pMax" type="number" placeholder="max" class="w-1/2 px-3 py-2 border rounded-md" />
+      </div>
+
+      <label class="block text-sm text-slate-600 mb-1">Availability</label>
+      <select id="availability" class="w-full px-3 py-2 border rounded-md mb-4">
+        <option value="any">Any</option>
+        <option value="in">In stock</option>
+        <option value="out">Out of stock</option>
+      </select>
+
+      <button id="applyFilters" class="w-full py-2 rounded-md btn-primary">Apply</button>
+      <button id="exportCSV" class="w-full py-2 mt-3 rounded-md btn-ghost">Export visible (CSV)</button>
+
+      <div class="mt-6 text-xs text-slate-500">
+        <div class="mb-2"><strong>Tip:</strong> Use AI Suggestion to view estimated market price.</div>
+        <a href="/mnt/data/3fe222ec-e90a-474c-a6ac-1b19f40b2a75.pdf" class="text-sm text-green-600 font-medium" target="_blank">Open pitch deck</a>
+      </div>
+    </aside>
+
+    <!-- listings -->
+    <section class="lg:col-span-9">
+      <div class="flex items-center justify-between mb-4">
+        <div class="sm:hidden text-sm text-slate-600">Showing <span id="resultCountMobile" class="font-semibold">0</span> listings</div>
+        <div class="flex gap-2">
+          <button id="openOverlayMobile" class="sm:hidden px-3 py-2 rounded-md btn-ghost">Filters</button>
+        </div>
+      </div>
+
+      <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+
+      <!-- pagination -->
+      <div class="mt-6 flex items-center justify-center gap-3">
+        <button id="prevPage" class="px-3 py-1 rounded-md border">Prev</button>
+        <div id="pageInfo" class="text-sm text-slate-600">Page 1</div>
+        <button id="nextPage" class="px-3 py-1 rounded-md border">Next</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- Modals and tooltips -->
+<div id="modalBackdrop" class="modal-backdrop" aria-hidden="true"></div>
+
+<!-- BUY modal -->
+<div id="buyModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-inner">
+    <div class="p-6">
+      <h3 class="text-lg font-semibold" id="buyTitle">Buy</h3>
+      <p class="text-sm text-slate-600 mt-1" id="buySubtitle"></p>
+      <div class="mt-4">
+        <label class="text-sm text-slate-600">Quantity to buy (kg)</label>
+        <input id="buyQty" type="number" min="1" class="w-full px-3 py-2 border rounded-md mt-2" />
+      </div>
+      <div class="mt-4 flex gap-3">
+        <button id="confirmBuy" class="btn-primary px-4 py-2 rounded-md">Confirm purchase</button>
+        <button id="cancelBuy" class="px-4 py-2 rounded-md btn-ghost">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEGOTIATE modal -->
+<div id="negModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-inner">
+    <div class="p-4 border-b flex items-center justify-between">
+      <div>
+        <div id="negTitle" class="font-semibold">Negotiate</div>
+        <div id="negItemSmall" class="text-xs text-slate-500">Item</div>
+      </div>
+      <button id="closeNeg" class="text-slate-500 px-3">✕</button>
+    </div>
+    <div id="negChat" class="p-4 h-72 overflow-y-auto bg-slate-50"></div>
+    <div class="p-4 border-t flex gap-2">
+      <input id="negInput" type="text" placeholder="Write your offer or message..." class="flex-1 px-3 py-2 border rounded-md" />
+      <button id="negSend" class="px-4 py-2 rounded-md btn-primary">Send</button>
+      <button id="negOffer" class="px-4 py-2 rounded-md bg-green-50 text-green-700 border border-green-100">Send Offer</button>
+    </div>
+  </div>
+</div>
+
+<!-- AI modal -->
+<div id="aiModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-inner">
+    <div class="p-6">
+      <h3 class="text-lg font-semibold">AI Price Suggestion</h3>
+      <p id="aiMaterialName" class="text-sm text-slate-600 mt-1"></p>
+
+      <div class="mt-4">
+        <div class="text-sm text-slate-500">Suggested unit price (₹ / kg)</div>
+        <div id="aiPrice" class="text-3xl font-bold text-green-600 mt-2">—</div>
+        <div id="aiConfidence" class="text-xs text-slate-500 mt-1">Confidence: —</div>
+      </div>
+
+      <div class="mt-6 flex gap-2">
+        <button id="closeAI" class="px-4 py-2 rounded-md btn-ghost">Close</button>
+        <button id="aiCopy" class="px-4 py-2 rounded-md btn-primary">Use suggestion</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed right-6 bottom-6 hidden bg-slate-800 text-white px-4 py-2 rounded-md shadow z-10000">Message</div>
+
+<!-- Footer -->
+<footer class="bg-slate-100 mt-12 border-t">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div>
+        <h3 class="text-lg font-semibold text-slate-700">Waste2Worth</h3>
+        <p class="text-sm text-slate-500 mt-2">Enabling a smooth B2B circular economy.</p>
+      </div>
+
+      <div>
+        <h4 class="text-sm font-semibold text-slate-700 mb-3">Quick links</h4>
+        <ul class="space-y-2">
+          <li><a href="/mnt/data/3fe222ec-e90a-474c-a6ac-1b19f40b2a75.pdf" target="_blank" class="text-sm text-slate-600 hover:text-green-600 transition">Pitch deck</a></li>
+          <li><a href="#" class="text-sm text-slate-600 hover:text-green-600 transition">Privacy policy</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-sm font-semibold text-slate-700 mb-3">Connect</h4>
+        <div class="flex items-center gap-4">
+          <a href="#" class="text-slate-600 hover:text-green-600 transition text-sm">LinkedIn</a>
+          <a href="contact.html" class="text-slate-600 hover:text-green-600 transition text-sm">Contact</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t mt-10 pt-6 flex flex-col md:flex-row items-center justify-between">
+      <p class="text-sm text-slate-500">© Waste2Worth • All rights reserved</p>
+      <p class="text-sm text-slate-500 mt-3 md:mt-0">Built for a better circular economy</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ---------------------------
+     JavaScript: data, rendering, filters and interactions
+     --------------------------- -->
+<script>
+// --- RDF-specific waste options requested by user (keeps exact labels) ---
+const MATERIALS = [
+  "Plastic Waste (for RDF)",
+  "Paper Waste (for RDF)",
+  "Textile Waste",
+  "Rubber Waste",
+  "Biomass Waste",
+  "Agricultural Residue Waste",
+  "Wood Waste",
+  "Cardboard Reject",
+  "Mixed Packaging Waste",
+  "Film Plastic Waste",
+  "Hard Plastic Waste"
+];
+
+// Sample listings updated to use RDF options and images matching type (Unsplash queries).
+// Only images and material labels changed per your request; other behaviour unchanged.
+const LISTINGS = [
+  {id:1, title:"Mixed Film Plastic Bales", material:"Film Plastic Waste", qty:1200, price:18, city:"Delhi", state:"Delhi", verified:true, available:"in", age:2, dist:12, img:"https://images.unsplash.com/photo-1581579184736-3f6e7b2fc64f?q=80"},
+  {id:2, title:"Cardboard Reject Bundles", material:"Cardboard Reject", qty:500, price:12, city:"Mumbai", state:"Maharashtra", verified:true, available:"in", age:5, dist:60, img:"https://images.unsplash.com/photo-1503602642458-232111445657?q=80"},
+  {id:3, title:"Hard Plastic Pellets (reclaim)", material:"Hard Plastic Waste", qty:2400, price:20, city:"Pune", state:"Maharashtra", verified:false, available:"in", age:7, dist:90, img:"https://images.unsplash.com/photo-1585386959984-a4155226b7b6?q=80"},
+  {id:4, title:"Plastic Waste for RDF (mixed)", material:"Plastic Waste (for RDF)", qty:800, price:9, city:"Ahmedabad", state:"Gujarat", verified:true, available:"in", age:1, dist:150, img:"https://images.unsplash.com/photo-1597328041442-4a6f8d3e0bf5?q=80"},
+  {id:5, title:"Agricultural Residue (bagged)", material:"Agricultural Residue Waste", qty:2000, price:2, city:"Kolkata", state:"West Bengal", verified:true, available:"in", age:3, dist:160, img:"https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80"},
+  {id:6, title:"Textile Clippings (RDF mix)", material:"Textile Waste", qty:150, price:5, city:"Bengaluru", state:"Karnataka", verified:false, available:"in", age:10, dist:40, img:"https://images.unsplash.com/photo-1591012911209-9e4f5a6a7b8c?q=80"},
+  {id:7, title:"Wood Waste (chipped)", material:"Wood Waste", qty:1800, price:6, city:"Surat", state:"Gujarat", verified:false, available:"in", age:15, dist:110, img:"https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80"},
+  {id:8, title:"Rubber Scrap (shredded)", material:"Rubber Waste", qty:1000, price:8, city:"Chennai", state:"Tamil Nadu", verified:true, available:"in", age:4, dist:320, img:"https://images.unsplash.com/photo-1526403224742-8b8b1f7a7f8b?q=80"},
+  {id:9, title:"Biomass Waste (compostable)", material:"Biomass Waste", qty:6000, price:1, city:"Delhi", state:"Delhi", verified:false, available:"in", age:1, dist:10, img:"https://images.unsplash.com/photo-1544025162-d76694265947?q=80"},
+  {id:10, title:"Paper Waste (RDF quality)", material:"Paper Waste (for RDF)", qty:300, price:10, city:"Hyderabad", state:"Telangana", verified:true, available:"in", age:6, dist:220, img:"https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80"}
+];
+
+// Pagination
+let currentPage = 1;
+const PAGE_SIZE = 6;
+
+// DOM refs
+const materialFiltersEl = document.getElementById('materialFilters');
+const overlayMaterialFiltersEl = document.getElementById('overlayMaterialFilters');
+const cardsGrid = document.getElementById('cardsGrid');
+const resultCount = document.getElementById('resultCount');
+const resultCountMobile = document.getElementById('resultCountMobile');
+const sortSelect = document.getElementById('sortSelect');
+const prevPageBtn = document.getElementById('prevPage');
+const nextPageBtn = document.getElementById('nextPage');
+const pageInfo = document.getElementById('pageInfo');
+
+// Build material checkboxes (desktop + overlay)
+MATERIALS.forEach((m, idx) => {
+  const id = 'mat_'+idx;
+  const wrap = document.createElement('label');
+  wrap.className = 'flex items-center gap-2 text-sm';
+  wrap.innerHTML = `<input data-mat="${m}" type="checkbox" id="${id}" class="h-4 w-4 border rounded text-green-600"><span>${m}</span>`;
+  materialFiltersEl.appendChild(wrap);
+
+  const oid = 'ov_mat_'+idx;
+  const owrap = document.createElement('label');
+  owrap.className = 'flex items-center gap-2 text-sm';
+  owrap.innerHTML = `<input data-mat="${m}" type="checkbox" id="${oid}" class="h-4 w-4 border rounded text-green-600"><span>${m}</span>`;
+  overlayMaterialFiltersEl.appendChild(owrap);
+});
+
+// Helper: read filter values (desktop)
+function getFilterValuesFromDesktop(){
+  const selectedMaterials = Array.from(materialFiltersEl.querySelectorAll('input[type=checkbox]:checked')).map(i=>i.dataset.mat);
+  const qmin = Number(document.getElementById('qMin').value || 0);
+  const qmax = Number(document.getElementById('qMax').value || 1e9);
+  const ver = document.getElementById('verification').value;
+  const loc = (document.getElementById('locationFilter').value || '').trim().toLowerCase();
+  const pmin = Number(document.getElementById('pMin').value || 0);
+  const pmax = Number(document.getElementById('pMax').value || 1e9);
+  const avail = document.getElementById('availability').value;
+  const sort = sortSelect.value;
+  return { selectedMaterials, qmin, qmax, ver, loc, pmin, pmax, avail, sort };
+}
+function getFilterValuesFromOverlay(){
+  const selectedMaterials = Array.from(overlayMaterialFiltersEl.querySelectorAll('input[type=checkbox]:checked')).map(i=>i.dataset.mat);
+  const qmin = Number(document.getElementById('ovQMin').value || 0);
+  const qmax = Number(document.getElementById('ovQMax').value || 1e9);
+  const ver = document.getElementById('ovVerification').value;
+  const loc = (document.getElementById('ovLocation').value || '').trim().toLowerCase();
+  const pmin = Number(document.getElementById('ovPMin').value || 0);
+  const pmax = Number(document.getElementById('ovPMax').value || 1e9);
+  const avail = document.getElementById('ovAvailability').value;
+  const sort = sortSelect.value;
+  return { selectedMaterials, qmin, qmax, ver, loc, pmin, pmax, avail, sort };
+}
+
+// Filtering logic
+function filterListings(filters){
+  const f = filters || getFilterValuesFromDesktop();
+  let filtered = LISTINGS.filter(l => {
+    if(f.selectedMaterials.length && !f.selectedMaterials.includes(l.material)) return false;
+    if(l.qty < f.qmin || l.qty > f.qmax) return false;
+    if(f.ver === 'verified' && !l.verified) return false;
+    if(f.loc && !(l.city.toLowerCase().includes(f.loc) || l.state.toLowerCase().includes(f.loc))) return false;
+    if(l.price < f.pmin || l.price > f.pmax) return false;
+    if(f.avail !== 'any' && l.available !== f.avail) return false;
+    return true;
+  });
+
+  if(f.sort === 'price-asc') filtered.sort((a,b)=>a.price-b.price);
+  else if(f.sort === 'price-desc') filtered.sort((a,b)=>b.price-a.price);
+  else if(f.sort === 'distance') filtered.sort((a,b)=>a.dist-b.dist);
+  else filtered.sort((a,b)=>a.age - b.age);
+
+  return filtered;
+}
+
+// Render + pagination
+function renderCards(page=1, filters=null){
+  const filtered = filterListings(filters);
+  const total = filtered.length;
+  resultCount.innerText = total;
+  resultCountMobile.innerText = total;
+
+  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  if(page > pages) page = pages;
+  currentPage = page;
+  pageInfo.innerText = `Page ${page} / ${pages}`;
+  prevPageBtn.disabled = page <= 1;
+  nextPageBtn.disabled = page >= pages;
+
+  const start = (page-1)*PAGE_SIZE;
+  const pageItems = filtered.slice(start, start+PAGE_SIZE);
+
+  cardsGrid.innerHTML = '';
+  if(pageItems.length === 0){
+    cardsGrid.innerHTML = `<div class="col-span-full p-8 text-center text-slate-500">No listings match your filters.</div>`;
+    return;
+  }
+
+  pageItems.forEach(item => {
+    const card = document.createElement('article');
+    card.className = 'card rounded-lg p-4';
+    // Image and content updated to match RDF-type images
+    card.innerHTML = `
+      <img src="${item.img}" class="card-img w-full mb-3 rounded-md" alt="${escapeHtml(item.title)}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80'">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <h3 class="font-semibold text-slate-800">${escapeHtml(item.title)}</h3>
+          <div class="text-sm text-slate-500 mt-1">${escapeHtml(item.material)} • ${item.qty.toLocaleString()} kg</div>
+          <div class="text-sm text-slate-500">${escapeHtml(item.city)}, ${escapeHtml(item.state)}</div>
+          <div class="mt-2 font-semibold text-green-600">₹ ${item.price} / kg</div>
+        </div>
+        <div class="text-right">
+          <div class="pill">${item.verified ? 'Verified' : 'Unverified'}</div>
+          <div class="text-xs text-slate-400 mt-2">Dist ${item.dist} km</div>
+        </div>
+      </div>
+
+      <div class="mt-4 flex gap-2">
+        <button class="flex-1 py-2 rounded-md btn-primary" onclick="openBuy(${item.id})">Buy Now</button>
+        <button class="flex-1 py-2 rounded-md btn-ghost" onclick="openNeg(${item.id})">Negotiate</button>
+        <button class="flex-1 py-2 rounded-md" style="background:#0ea5a4;color:white" onclick="openAI(${item.id})">AI Suggestion</button>
+      </div>
+    `;
+    cardsGrid.appendChild(card);
+  });
+}
+
+// escape helper
+function escapeHtml(unsafe) {
+  return String(unsafe).replace(/[&<>"'`=\/]/g, function (s) {
+    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;','=':'&#x3D;','`':'&#96;'})[s];
+  });
+}
+
+// Overlay open/close + mirror logic
+const overlay = document.getElementById('filterOverlay');
+const overlayBackdrop = document.getElementById('overlayBackdrop');
+const openOverlayBtn = document.getElementById('openOverlayBtn');
+const openOverlayMobile = document.getElementById('openOverlayMobile');
+const closeOverlayBtn = document.getElementById('closeOverlayBtn');
+const applyOverlayBtn = document.getElementById('applyOverlayFilters');
+const clearOverlayBtn = document.getElementById('clearOverlayFilters');
+
+function lockBody(){ document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden'; }
+function unlockBody(){ document.documentElement.style.overflow = ''; document.body.style.overflow = ''; }
+
+function openOverlay(){
+  mirrorDesktopToOverlay();
+  overlay.classList.add('open');
+  overlayBackdrop.classList.add('open');
+  overlay.setAttribute('aria-hidden','false');
+  overlayBackdrop.setAttribute('aria-hidden','false');
+  lockBody();
+}
+function closeOverlay(){
+  overlay.classList.remove('open');
+  overlayBackdrop.classList.remove('open');
+  overlay.setAttribute('aria-hidden','true');
+  overlayBackdrop.setAttribute('aria-hidden','true');
+  unlockBody();
+}
+
+openOverlayBtn?.addEventListener('click', openOverlay);
+openOverlayMobile?.addEventListener('click', openOverlay);
+closeOverlayBtn?.addEventListener('click', closeOverlay);
+overlayBackdrop?.addEventListener('click', closeOverlay);
+
+function mirrorDesktopToOverlay(){
+  Array.from(materialFiltersEl.querySelectorAll('input[type=checkbox]')).forEach(el=>{
+    const mat = el.dataset.mat;
+    const ov = overlayMaterialFiltersEl.querySelector(`input[data-mat="${mat}"]`);
+    if(ov) ov.checked = el.checked;
+  });
+  document.getElementById('ovQMin').value = document.getElementById('qMin').value;
+  document.getElementById('ovQMax').value = document.getElementById('qMax').value;
+  document.getElementById('ovLocation').value = document.getElementById('locationFilter').value;
+  document.getElementById('ovPMin').value = document.getElementById('pMin').value;
+  document.getElementById('ovPMax').value = document.getElementById('pMax').value;
+  document.getElementById('ovVerification').value = document.getElementById('verification').value;
+  document.getElementById('ovAvailability').value = document.getElementById('availability').value;
+}
+function mirrorOverlayToDesktop(){
+  Array.from(overlayMaterialFiltersEl.querySelectorAll('input[type=checkbox]')).forEach(el=>{
+    const mat = el.dataset.mat;
+    const desktop = materialFiltersEl.querySelector(`input[data-mat="${mat}"]`);
+    if(desktop) desktop.checked = el.checked;
+  });
+  document.getElementById('qMin').value = document.getElementById('ovQMin').value;
+  document.getElementById('qMax').value = document.getElementById('ovQMax').value;
+  document.getElementById('locationFilter').value = document.getElementById('ovLocation').value;
+  document.getElementById('pMin').value = document.getElementById('ovPMin').value;
+  document.getElementById('pMax').value = document.getElementById('ovPMax').value;
+  document.getElementById('verification').value = document.getElementById('ovVerification').value;
+  document.getElementById('availability').value = document.getElementById('ovAvailability').value;
+}
+
+applyOverlayBtn?.addEventListener('click', ()=> {
+  mirrorOverlayToDesktop();
+  const filters = getFilterValuesFromDesktop();
+  renderCards(1, filters);
+  closeOverlay();
+  showToast('Filters applied');
+});
+
+clearOverlayBtn?.addEventListener('click', ()=> {
+  Array.from(overlayMaterialFiltersEl.querySelectorAll('input[type=checkbox]')).forEach(i=>i.checked=false);
+  document.getElementById('ovQMin').value=''; document.getElementById('ovQMax').value='';
+  document.getElementById('ovPMin').value=''; document.getElementById('ovPMax').value='';
+  document.getElementById('ovVerification').value='any'; document.getElementById('ovAvailability').value='any';
+  document.getElementById('ovLocation').value='';
+});
+
+// Desktop apply/reset
+document.getElementById('applyFilters')?.addEventListener('click', ()=> {
+  const filters = getFilterValuesFromDesktop();
+  renderCards(1, filters);
+  showToast('Filters applied');
+});
+document.getElementById('clearFilters')?.addEventListener('click', ()=> {
+  clearAllFilters();
+  renderCards(1);
+  showToast('Filters reset');
+});
+
+// export CSV
+document.getElementById('exportCSVOverlay')?.addEventListener('click', exportVisibleCSV);
+document.getElementById('exportCSV')?.addEventListener('click', exportVisibleCSV);
+
+// pagination
+prevPageBtn.addEventListener('click', ()=> renderCards(currentPage-1));
+nextPageBtn.addEventListener('click', ()=> renderCards(currentPage+1));
+sortSelect.addEventListener('change', ()=> renderCards(1));
+
+// ---------------------------
+// Modal helpers
+const modalBackdrop = document.getElementById('modalBackdrop');
+const buyModal = document.getElementById('buyModal');
+const negModal = document.getElementById('negModal');
+const aiModal = document.getElementById('aiModal');
+
+function openModal(modal){
+  closeOverlay();
+  modalBackdrop.style.display = 'block';
+  modalBackdrop.classList.add('open');
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+  modalBackdrop.setAttribute('aria-hidden','false');
+  lockBody();
+}
+function closeModal(modal){
+  modal.classList.remove('open');
+  modalBackdrop.classList.remove('open');
+  modal.setAttribute('aria-hidden','true');
+  modalBackdrop.setAttribute('aria-hidden','true');
+  setTimeout(()=>{ modalBackdrop.style.display = 'none'; }, 320);
+  unlockBody();
+}
+function closeAllModals(){
+  [buyModal, negModal, aiModal].forEach(m=>m.classList.remove('open'));
+  modalBackdrop.classList.remove('open');
+  modalBackdrop.style.display = 'none';
+  unlockBody();
+}
+modalBackdrop.addEventListener('click', ()=> closeAllModals());
+
+// Buy flow
+let currentBuyId = null;
+function openBuy(id){
+  const item = LISTINGS.find(i=>i.id===id);
+  currentBuyId = id;
+  document.getElementById('buyTitle').innerText = `Buy — ${item.title}`;
+  document.getElementById('buySubtitle').innerText = `${item.qty.toLocaleString()} kg available • ₹${item.price} / kg • ${item.city}`;
+  document.getElementById('buyQty').value = Math.min(100, item.qty);
+  openModal(buyModal);
+}
+document.getElementById('confirmBuy').addEventListener('click', ()=> {
+  const qty = Number(document.getElementById('buyQty').value || 0);
+  if(qty <= 0){ showToast('Please enter a valid quantity'); return; }
+  const item = LISTINGS.find(i=>i.id===currentBuyId);
+  if(qty > item.qty){ showToast('Quantity exceeds available amount'); return; }
+  item.qty -= qty;
+  showToast(`Purchase request sent: ${qty.toLocaleString()} kg of ${item.material}`);
+  closeModal(buyModal);
+  renderCards(currentPage);
+});
+document.getElementById('cancelBuy').addEventListener('click', ()=> closeModal(buyModal));
+
+// Negotiate flow
+let currentNegId = null;
+function openNeg(id){
+  currentNegId = id;
+  const item = LISTINGS.find(i=>i.id===id);
+  document.getElementById('negTitle').innerText = `Negotiate — ${item.title}`;
+  document.getElementById('negItemSmall').innerText = `${item.material} • ${item.qty.toLocaleString()} kg • ₹${item.price}/kg`;
+  document.getElementById('negChat').innerHTML = '';
+  appendMsg('seller', `Hello — listing posted. Asking price ₹${item.price}/kg.`);
+  appendMsg('system', 'You can suggest an offer or chat with the seller. Use "Send Offer" to send a numeric offer.');
+  openModal(negModal);
+  scrollNeg();
+}
+document.getElementById('closeNeg').addEventListener('click', ()=> closeModal(negModal));
+
+function appendMsg(who, text){
+  const el = document.createElement('div');
+  el.className = 'mb-3';
+  if(who==='me'){
+    el.innerHTML = `<div class="text-sm text-right"><div class="inline-block bg-green-600 text-white px-3 py-2 rounded-md">${escapeHtml(text)}</div></div>`;
+  } else if(who==='seller'){
+    el.innerHTML = `<div class="text-left"><div class="inline-block bg-slate-100 text-slate-800 px-3 py-2 rounded-md border">${escapeHtml(text)}</div></div>`;
+  } else {
+    el.innerHTML = `<div class="text-left"><div class="inline-block text-xs text-slate-500 italic">${escapeHtml(text)}</div></div>`;
+  }
+  document.getElementById('negChat').appendChild(el);
+  scrollNeg();
+}
+function scrollNeg(){ const c = document.getElementById('negChat'); c.scrollTop = c.scrollHeight; }
+
+document.getElementById('negSend').addEventListener('click', ()=> {
+  const txt = document.getElementById('negInput').value.trim();
+  if(!txt) return;
+  appendMsg('me', txt);
+  document.getElementById('negInput').value = '';
+  setTimeout(()=> appendMsg('seller', 'Thanks — seller received your message. They will respond with a price if interested.'), 800);
+});
+document.getElementById('negOffer').addEventListener('click', ()=> {
+  const val = document.getElementById('negInput').value.trim();
+  if(!val || isNaN(Number(val))){ showToast('Enter numeric offer (₹/kg) in the message box'); return; }
+  const offer = Number(val);
+  appendMsg('me', `Offer: ₹ ${offer} / kg`);
+  document.getElementById('negInput').value = '';
+  setTimeout(()=> {
+    const item = LISTINGS.find(i=>i.id===currentNegId);
+    const acceptThreshold = item.price * 0.9;
+    if(offer >= acceptThreshold){
+      appendMsg('seller', `Seller accepted offer: ₹${offer}/kg. Please proceed to Buy Now.`);
+    } else {
+      appendMsg('seller', `Seller declined. Counter-offer: ₹${Math.round(item.price * 0.95)}/kg`);
+    }
+  }, 900);
+});
+
+// AI Suggestion (kept simple)
+let lastAISuggestion = null;
+function openAI(id){
+  const item = LISTINGS.find(i=>i.id===id);
+  document.getElementById('aiMaterialName').innerText = `${item.title} — ${item.material}`;
+  const baseMap = {
+    "Plastic Waste (for RDF)":15, "Film Plastic Waste":12, "Hard Plastic Waste":18,
+    "Paper Waste (for RDF)":10, "Cardboard Reject":9,
+    "Textile Waste":6, "Rubber Waste":8, "Biomass Waste":2,
+    "Agricultural Residue Waste":1.5, "Wood Waste":5, "Mixed Packaging Waste":7
+  };
+  const mat = item.material;
+  let base = baseMap[mat] ?? (item.price || 10);
+  if(item.qty >= 2000) base *= 0.95;
+  else if(item.qty < 300) base *= 1.05;
+  if(item.verified) base *= 1.05;
+  base *= (1 - Math.min(item.dist, 500)/2000);
+  base = Math.round(base * 100) / 100;
+  const confidence = Math.max(45, Math.round(90 - Math.abs(item.price - base)));
+  lastAISuggestion = {id, price: base, confidence};
+  document.getElementById('aiPrice').innerText = `₹ ${base} / kg`;
+  document.getElementById('aiConfidence').innerText = `Confidence: ${confidence}%`;
+  openModal(aiModal);
+}
+document.getElementById('closeAI').addEventListener('click', ()=> closeModal(aiModal));
+document.getElementById('aiCopy').addEventListener('click', ()=> {
+  if(!lastAISuggestion) return;
+  document.getElementById('negInput').value = String(lastAISuggestion.price);
+  closeModal(aiModal);
+  openNeg(lastAISuggestion.id);
+});
+
+// CSV export (visible filtered results)
+function exportVisibleCSV(){
+  const filtered = filterListings();
+  const headers = ['id','title','material','qty','price','city','state','verified','available','distanceKm'];
+  const rows = filtered.map(r => headers.map(h => JSON.stringify(r[h] ?? '')).join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'listings.csv';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('CSV exported');
+}
+
+// Toast helper
+function showToast(msg, time=2200){
+  const t = document.getElementById('toast');
+  t.innerText = msg; t.classList.remove('hidden'); t.style.opacity = 1;
+  setTimeout(()=>{ t.style.opacity = 0; setTimeout(()=>t.classList.add('hidden'),300); }, time);
+}
+
+// clear filters helper
+function clearAllFilters(){
+  document.querySelectorAll('#materialFilters input').forEach(i=>i.checked=false);
+  document.getElementById('qMin').value=''; document.getElementById('qMax').value='';
+  document.getElementById('verification').value='any'; document.getElementById('locationFilter').value='';
+  document.getElementById('pMin').value=''; document.getElementById('pMax').value=''; document.getElementById('availability').value='any';
+  sortSelect.value='newest';
+}
+
+// Init render
+renderCards(1);
+
+// Defensive pagination
+prevPageBtn.addEventListener('click', ()=> renderCards(currentPage-1));
+nextPageBtn.addEventListener('click', ()=> renderCards(currentPage+1));
+
+// --- Small GSAP animations to match Home feel (logo + nav + reveal) ---
+try{
+  gsap.registerPlugin(ScrollTrigger);
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  tl.from('#logo', { duration: 0.5, y: -12, opacity: 0 });
+  tl.from('#brandText', { duration: 0.45, x: -8, opacity: 0 }, '-=0.3');
+  // nav links
+  const navLinks = document.querySelectorAll('.nav-link');
+  if(navLinks.length) tl.from(navLinks, { duration: 0.45, y: -8, opacity: 0, stagger: 0.06 }, '-=0.3');
+  // reveal cards on scroll
+  gsap.utils.toArray('#cardsGrid > article').forEach((card,i)=>{
+    gsap.from(card, { y:12, opacity:0, duration:0.6, delay: 0.06*i, scrollTrigger:{ trigger: card, start: 'top 90%', toggleActions: 'play none none none' } });
+  });
+} catch(e){ console.warn('GSAP failed (nonfatal)', e); }
+
+</script>
+</body>
+</html>

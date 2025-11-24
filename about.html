@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>About Us — Waste2Worth</title>
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: { eco: { green: '#2EB67D', forest: '#157A4B', mint: '#E8F7F0' } },
+        fontFamily: { sans: ['Inter','sans-serif'] }
+      }
+    }
+  };
+</script>
+</head>
+
+<body class="bg-gray-50 font-sans text-slate-800">
+
+<!-- NAVBAR -->
+<header class="bg-white shadow sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-5 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <img class="w-9 h-9 rounded-full bg-green-600 font-bold" src="logos.png" alt="Waste2Worth Logo" />
+      <div>
+        <div class="text-lg font-semibold">Waste2Worth</div>
+        <div class="text-xs text-slate-500">Circular materials marketplace</div>
+      </div>
+    </div>
+
+    <nav class="flex items-center gap-6 text-sm">
+      <a href="index.html" class="hover:text-eco-forest transition">Home</a>
+      <a href="marketplace.html" class="hover:text-eco-forest transition">Marketplace</a>
+      <a href="about.html" class="text-eco-forest font-semibold">About</a>
+      <a href="how it works.html" class="text-eco-forest font-semibold">How it Works</a>
+      <a href="contact.html" class="hover:text-eco-forest transition">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO SECTION -->
+<section class="max-w-6xl mx-auto px-5 py-14">
+  <div class="bg-white p-10 rounded-3xl shadow-sm border border-gray-200">
+    <div class="flex flex-col md:flex-row items-center gap-10">
+      <div class="flex-1">
+        <h1 class="text-4xl font-bold text-eco-forest">About Waste2Worth</h1>
+        <p class="text-slate-600 mt-4 leading-relaxed">
+          Waste2Worth is a circular waste marketplace built by a passionate group of students.
+          Our goal is simple: turn waste into a valuable resource, and make recycling easier,
+          smarter and more transparent.
+        </p>
+      </div>
+
+      <div class="flex-1 flex justify-center">
+        <img src="https://cdn-icons-png.flaticon.com/512/9896/9896888.png"
+             alt="eco illustration"
+             class="w-64 h-64 object-contain" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION SECTION -->
+<section class="max-w-6xl mx-auto px-5 mt-10">
+  <div class="bg-eco-mint p-10 rounded-3xl shadow-sm border border-eco-green/20">
+    <h2 class="text-3xl font-semibold text-eco-forest mb-4">Our Mission</h2>
+    <p class="text-slate-700 leading-relaxed">
+      We believe that every piece of waste has value when connected to the right people.
+      Waste2Worth focuses on giving industries, small businesses and recyclers a trusted platform
+      where they can buy, sell and repurpose materials responsibly.  
+      Our mission is to make sustainability accessible, profitable and user-friendly.
+    </p>
+  </div>
+</section>
+
+<!-- TEAM SECTION -->
+<section class="max-w-6xl mx-auto px-5 mt-14 pb-20">
+  <h2 class="text-3xl font-bold text-eco-forest text-center mb-10">Meet Our Team</h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+    <!-- Leader -->
+    <div class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition border border-gray-200">
+      <img src="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
+           class="w-20 h-20 mx-auto object-contain" />
+      <h3 class="text-xl font-semibold text-center mt-4">Team Leader</h3>
+      <p class="text-center text-slate-500 text-sm mt-1">Backend Developer</p>
+      <p class="text-center text-sm text-slate-600 mt-3">
+        The visionary behind the Waste2Worth idea.  
+        Handles backend development, database structure, and core logic.
+      </p>
+    </div>
+
+    <!-- Frontend Dev -->
+    <div class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition border border-gray-200">
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"
+           class="w-20 h-20 mx-auto object-contain" />
+      <h3 class="text-xl font-semibold text-center mt-4">Frontend Developer</h3>
+      <p class="text-center text-slate-500 text-sm mt-1">UI Implementation</p>
+      <p class="text-center text-sm text-slate-600 mt-3">
+        Builds the entire user interface of the website.  
+        Ensures smooth user experience and modern responsive layouts.
+      </p>
+    </div>
+
+    <!-- UI/UX Designer -->
+    <div class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition border border-gray-200">
+      <img src="https://cdn-icons-png.flaticon.com/512/3001/3001764.png"
+           class="w-20 h-20 mx-auto object-contain" />
+      <h3 class="text-xl font-semibold text-center mt-4">UI/UX Designer</h3>
+      <p class="text-center text-slate-500 text-sm mt-1">Design & Branding</p>
+      <p class="text-center text-sm text-slate-600 mt-3">
+        Creates clean, modern eco-themed designs.  
+        Works on layout structure, branding colors and usability flow.
+      </p>
+    </div>
+
+    <!-- Data & Deployment -->
+    <div class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition border border-gray-200">
+      <img src="https://cdn-icons-png.flaticon.com/512/883/883807.png"
+           class="w-20 h-20 mx-auto object-contain" />
+      <h3 class="text-xl font-semibold text-center mt-4">Data & Deployment Engineer</h3>
+      <p class="text-center text-slate-500 text-sm mt-1">Hosting & Analytics</p>
+      <p class="text-center text-sm text-slate-600 mt-3">
+        Manages deployment, hosting optimization, analytics setup  
+        and ensures the platform runs fast & stable.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<footer class="bg-slate-100 mt-12 border-t">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div>
+        <h3 class="text-lg font-semibold text-slate-700">Waste2Worth</h3>
+        <p class="text-sm text-slate-500 mt-2">Enabling a smooth B2B circular economy.</p>
+      </div>
+
+      <div>
+        <h4 class="text-sm font-semibold text-slate-700 mb-3">Quick links</h4>
+        <ul class="space-y-2">
+          <li><a href="/mnt/data/3fe222ec-e90a-474c-a6ac-1b19f40b2a75.pdf" target="_blank" class="text-sm text-slate-600 hover:text-green-600 transition">Pitch deck</a></li>
+          <li><a href="#" class="text-sm text-slate-600 hover:text-green-600 transition">Privacy policy</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-sm font-semibold text-slate-700 mb-3">Connect</h4>
+        <div class="flex items-center gap-4">
+          <a href="#" class="text-slate-600 hover:text-green-600 transition text-sm">LinkedIn</a>
+          <a href="contact.html" class="text-slate-600 hover:text-green-600 transition text-sm">Contact</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t mt-10 pt-6 flex flex-col md:flex-row items-center justify-between">
+      <p class="text-sm text-slate-500">© Waste2Worth • All rights reserved</p>
+      <p class="text-sm text-slate-500 mt-3 md:mt-0">Built for a better circular economy</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

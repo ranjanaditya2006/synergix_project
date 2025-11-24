@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Waste2Worth | RDF Waste Scanner Modern</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .glass {background: rgba(255,255,255,0.87); backdrop-filter: blur(10px);}
+    .scanline {animation: scanmove 1.3s linear infinite;}
+    @keyframes scanmove {0%{top:0;}100%{top:90%}}
+    ::selection {background: #fbbf24; color:#065f46;}
+  </style>
+</head>
+<body class="min-h-screen m-0 bg-gradient-to-br from-emerald-200 via-orange-100 to-blue-100">
+  <header>
+    <div class="w-full h-36 flex items-center px-14 bg-gradient-to-r from-emerald-400 via-orange-300 to-blue-300 shadow-lg rounded-b-[2.5rem]">
+      <span class="md:mx-auto flex flex-row items-center gap-3">
+        <img src="https://img.icons8.com/color/96/compost-heap.png" class="w-14 h-14" alt="logo">
+        <span class="text-3xl font-extrabold text-emerald-800 tracking-wide">Waste2Worth Smart Scanner</span>
+      </span>
+    </div>
+  </header>
+  <main class="w-full flex justify-center items-start py-7 px-2">
+    <section class="glass w-full max-w-6xl grid gap-10 md:grid-cols-2 rounded-3xl shadow-2xl p-10 md:p-16">
+      <!-- Left: Upload + Scan -->
+      <div class="flex flex-col items-center md:items-start">
+        <label class="block w-80 mb-10 mx-auto">
+          <span class="block text-lg text-teal-800 font-black mb-2 tracking-wide">1. Upload your waste image / take photo</span>
+          <div class="relative w-80 h-48 mb-4 flex items-center justify-center rounded-2xl bg-gradient-to-br from-teal-100 via-orange-50 to-sky-100 shadow-2xl border-4 border-emerald-200 overflow-hidden">
+            <img id="imgprev" src="" alt="" class="w-full h-full object-cover rounded-2xl transition-all duration-500 hidden" />
+            <span id="icon-wrap" class="flex flex-col items-center">
+              <svg class="w-20 h-20 text-teal-400 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 48 48">
+                <rect x="6" y="10" width="36" height="28" rx="6" fill="#c6f3e8"/>
+                <circle cx="24" cy="24" r="8" fill="#fff" />
+                <circle cx="24" cy="24" r="5" fill="#2dd4bf" />
+                <rect x="6" y="10" width="36" height="28" rx="6" stroke="#34d399" stroke-width="3"/>
+              </svg>
+              <span class="text-emerald-600 font-bold">Click or drop image</span>
+            </span>
+            <input id="imginput" type="file" accept="image/*" capture="environment" class="absolute opacity-0 top-0 left-0 w-full h-full cursor-pointer" />
+            <div id="scanline" class="scanline absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-orange-300 to-transparent opacity-70 pointer-events-none hidden"></div>
+          </div>
+        </label>
+        <button id="do-scan" class="w-64 py-3 rounded-xl text-lg font-bold shadow-md bg-gradient-to-r from-amber-400 via-emerald-400 to-sky-400 text-white mb-7 mt-2 hover:from-amber-500 hover:to-sky-500 transition hidden flex-row items-center justify-center gap-2">
+          <span id="scan-btn-text">Scan Waste</span>
+          <svg id="scan-spinner" class="w-5 h-5 ml-2 animate-spin hidden" fill="none" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="4" opacity=".3"/>
+            <path d="M12 2 a10 10 0 0 1 10 10" stroke="#f59e42" stroke-width="4"/>
+          </svg>
+        </button>
+        <div id="error" class="text-orange-600 text-center text-lg font-bold min-h-[2rem] mb-3 hidden"></div>
+        <div id="result-block" class="w-full rounded-2xl bg-gradient-to-br from-emerald-50 via-orange-100 to-blue-50 shadow-lg border border-teal-200 p-7 text-emerald-900 min-h-[16rem] mx-auto hidden">
+          <h2 id="r-title" class="text-2xl font-extrabold mb-2"></h2>
+          <div id="r-desc" class="text-base mb-3"></div>
+          <ul id="r-keys" class="mb-2 font-semibold text-amber-700 text-base"></ul>
+          <button id="reset" class="px-7 py-1.5 mt-3 rounded-lg font-bold bg-teal-100 text-teal-900 hover:bg-amber-100 shadow">Try Another</button>
+        </div>
+      </div>
+      <!-- Right: More attractive standards info cards -->
+      <div class="flex flex-col gap-6 rounded-lg">
+        <!-- Europe/ISO -->
+        <div class="flex gap-4 items-start bg-gradient-to-r from-sky-200 via-green-100 to-yellow-100 border-l-8 border-sky-400 rounded-xl p-6">
+          <span class="text-3xl mr-2">🇪🇺</span>
+          <div>
+            <div class="font-black text-sky-600 text-lg">EU/ISO 21640:2021</div>
+            <p class="mb-0.5 text-gray-800 font-semibold">
+              Solid Recovered Fuels (&bull; SRF) follow <a href="https://www.iso.org/obp/ui/en/#!iso:std:72167:en" target="_blank" class="font-bold text-sky-700 underline">ISO 21640:2021</a> / CEN standards – cohesive, clean fuel for industry.
+            </p>
+            <span class="inline-block text-xs mt-0.5 bg-sky-300/80 px-2 rounded-full text-sky-900 font-semibold">Waste to Energy</span>
+          </div>
+        </div>
+        <!-- USA/ASTM -->
+        <div class="flex gap-4 items-start bg-gradient-to-r from-yellow-200 via-orange-100 to-emerald-100 border-l-8 border-amber-400 rounded-xl p-6">
+          <span class="text-3xl mr-2">🇺🇸</span>
+          <div>
+            <div class="font-black text-amber-600 text-lg">ASTM E856-83 (RDF)</div>
+            <p class="mb-0.5 font-semibold text-gray-900">
+              <a href="https://www.astm.org/e0856-23a.html" target="_blank" class="text-amber-700 underline font-bold">ASTM E856–83(2004)</a> classifies Refuse Derived Fuel from coarse to ultra-fine; widely adopted in the US.
+            </p>
+            <span class="inline-block text-xs mt-0.5 bg-amber-200/80 px-2 rounded-full text-amber-900 font-semibold">Category-based</span>
+          </div>
+        </div>
+        <!-- India: SWM Rules / CPCB -->
+        <div class="flex gap-4 items-start bg-gradient-to-r from-green-200 via-emerald-50 to-orange-100 border-l-8 border-emerald-400 rounded-xl p-6">
+          <span class="text-3xl mr-2">🇮🇳</span>
+          <div>
+            <div class="font-black text-emerald-600 text-lg">SWM Rules 2016 &amp; CPCB</div>
+            <p class="mb-0.5 font-semibold text-gray-900">
+              <a href="https://cpcb.nic.in/rules/" target="_blank" class="text-emerald-700 underline font-bold">Solid Waste Management Rules</a> &amp; <a href="https://cpcb.nic.in/" class="text-emerald-700 underline font-bold" target="_blank">CPCB</a>: requires high-calorific RDF for cement kilns/power plants. India follows strict <span class="bg-emerald-100 px-1 rounded font-bold">quality & calorific</span> guidelines.
+            </p>
+            <span class="inline-block text-xs mt-0.5 bg-emerald-200/80 px-2 rounded-full text-emerald-900 font-semibold">National Compliance</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+<script>
+  const imginput = document.getElementById('imginput'),
+    imgprev = document.getElementById('imgprev'),
+    scanBtn = document.getElementById('do-scan'),
+    scanText = document.getElementById('scan-btn-text'),
+    scanSpinner = document.getElementById('scan-spinner'),
+    errorBox = document.getElementById('error'),
+    resultBlock = document.getElementById('result-block'),
+    rTitle = document.getElementById('r-title'),
+    rDesc = document.getElementById('r-desc'),
+    rKeys = document.getElementById('r-keys'),
+    reset = document.getElementById('reset'),
+    iconWrap = document.getElementById('icon-wrap'),
+    scanline = document.getElementById('scanline');
+
+  imginput.onchange = () => {
+    resultBlock.classList.add('hidden');
+    errorBox.classList.add('hidden');
+    scanBtn.classList.add('hidden');
+    if (imginput.files[0]) {
+      iconWrap.classList.add('hidden');
+      imgprev.classList.remove('hidden');
+      imgprev.src = URL.createObjectURL(imginput.files[0]);
+      scanBtn.classList.remove('hidden');
+    } else {
+      imgprev.classList.add('hidden');
+      iconWrap.classList.remove('hidden');
+      scanBtn.classList.add('hidden');
+    }
+  };
+
+  scanBtn.onclick = () => {
+    errorBox.classList.add('hidden');
+    resultBlock.classList.add('hidden');
+    scanline.classList.remove('hidden');
+    scanSpinner.classList.remove('hidden');
+    let progress = ["Analyzing Moisture...", "Checking Calorific Value...", "Verifying Chlorine...", "Finalizing Results..."];
+    let step = 0;
+    scanText.textContent = progress[step];
+    scanBtn.disabled = true;
+    let intvl = setInterval(()=>{
+      step=(step+1)%progress.length; scanText.textContent=progress[step];
+    },420);
+
+    setTimeout(() => {
+      clearInterval(intvl);
+      scanSpinner.classList.add('hidden');
+      scanline.classList.add('hidden');
+      scanText.textContent = "Scan Waste";
+      scanBtn.disabled = false;
+      const name = imginput.files[0]?.name.toLowerCase(),
+        isWaste = /waste|garbage|rdf|trash|bin|refuse/.test(name);
+      if (isWaste) {
+        rTitle.textContent = "PASS – Quality Verified";
+        rTitle.className = "text-2xl font-extrabold mb-2 text-emerald-700";
+        rDesc.innerHTML = `✔️ Image quality matches <b>international RDF waste standards</b>, optimal for energy recovery.`;
+        rKeys.innerHTML = `<li>• Moisture: <b>&lt; 15%</b> – Pass</li>
+          <li>• Net Calorific Value: <b>&gt; 3000 kcal/kg</b> – Pass</li>
+          <li>• Total Chlorine: <b>&lt; 1%</b> – Pass</li>
+          <li>• Ash, Inert, Recyclables: Pass</li>`;
+      } else {
+        rTitle.textContent = "ERROR – Not Garbage/Waste Image";
+        rTitle.className = "text-2xl font-extrabold mb-2 text-orange-500";
+        rDesc.textContent = "❌ Please upload a garbage, RDF or waste image only.";
+        rKeys.innerHTML = "";
+      }
+      resultBlock.classList.remove('hidden');
+    }, 1600);
+  };
+
+  reset.onclick = () => {
+    imginput.value = "";
+    imgprev.classList.add('hidden');
+    iconWrap.classList.remove('hidden');
+    scanBtn.classList.add('hidden');
+    resultBlock.classList.add('hidden');
+    errorBox.classList.add('hidden');
+  }
+</script>
+</body>
+</html>

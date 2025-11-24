@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard – Waste2Worth</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body { background: #f7f9fb; font-family: 'Inter', sans-serif; }
+.sidebar-item:hover { background: #eef3ff; }
+.active-item { background: #e0e7ff !important; font-weight: 600; }
+.shadow-card { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+#mobileSidebar { transition: transform 0.3s ease; }
+</style>
+
+</head>
+
+<body class="text-gray-800">
+
+<!-- TOP NAVBAR -->
+<nav class="w-full bg-white border-b fixed top-0 left-0 z-50 shadow-sm">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Back Button -->
+      <a href="marketplace.html" class="text-sm px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md flex items-center gap-2">
+        ◀ Back to Marketplace
+      </a>
+
+      <!-- Search -->
+      <div class="hidden md:flex items-center w-1/3">
+        <input type="text" placeholder="Search..." class="w-full px-4 py-2 rounded-md bg-gray-100 border border-gray-200">
+      </div>
+
+      <!-- Right Side -->
+      <div class="flex items-center gap-6">
+
+        <!-- Notification -->
+        <button class="relative">
+          <span class="material-icons text-gray-600">🔔</span>
+          <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-600 rounded-full"></span>
+        </button>
+
+        <!-- User -->
+        <div class="relative">
+          <button id="profileBtn" class="flex items-center gap-2">
+            <img src="https://i.pravatar.cc/150?img=32" class="w-9 h-9 rounded-full">
+            <span class="font-medium">Sam</span>
+          </button>
+
+          <!-- Dropdown -->
+          <div id="profileMenu" class="hidden absolute right-0 mt-2 bg-white border rounded-lg shadow-lg w-48">
+            <a class="block px-4 py-2 hover:bg-gray-100" href="account-settings.html">Profile Settings</a>
+            <a class="block px-4 py-2 hover:bg-gray-100" href="account-settings.html">Account Settings</a>
+            <a class="block px-4 py-2 hover:bg-gray-100" href="help-support.html">Help & Support</a>
+            <a class="block px-4 py-2 hover:bg-gray-100 text-red-600" href="#">Logout</a>
+          </div>
+        </div>
+
+        <!-- Mobile Sidebar Button -->
+        <button id="sidebarToggle" class="lg:hidden px-3 py-2 rounded-md bg-gray-100">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<aside id="desktopSidebar" class="hidden lg:block w-64 bg-white fixed top-16 left-0 h-screen border-r shadow-sm">
+  <nav class="py-4 text-sm">
+    <a class="sidebar-item active-item block px-6 py-3" href="dashboard.html">Dashboard Overview</a>
+    <a class="sidebar-item block px-6 py-3" href="my listing.html">My Listings</a>
+    <a class="sidebar-item block px-6 py-3" href="transaction-history.html">Transaction History</a>
+    <a class="sidebar-item block px-6 py-3" href="analytics-reports.html">Analytics & Reports</a>
+    <a class="sidebar-item block px-6 py-3" href="account-settings.html">Account & Settings</a>
+    <a class="sidebar-item block px-6 py-3" href="help-support.html">Help & Support</a>
+  </nav>
+</aside>
+
+<!-- MOBILE SIDEBAR -->
+<aside id="mobileSidebar" class="lg:hidden fixed top-16 left-0 w-64 bg-white h-screen border-r shadow-md transform -translate-x-full">
+  <nav class="py-4 text-sm">
+    <a class="sidebar-item active-item block px-6 py-3" href="dashboard.html">Dashboard Overview</a>
+    <a class="sidebar-item block px-6 py-3" href="my listing.html">My Listings</a>
+    <a class="sidebar-item block px-6 py-3" href="transaction-history.html">Transaction History</a>
+    <a class="sidebar-item block px-6 py-3" href="analytics-reports.html">Analytics & Reports</a>
+    <a class="sidebar-item block px-6 py-3" href="account-settings.html">Account & Settings</a>
+    <a class="sidebar-item block px-6 py-3" href="help-support.html">Help & Support</a>
+  </nav>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="ml-0 lg:ml-64 pt-24 px-6 pb-12">
+
+  <!-- OVERVIEW -->
+  <h1 class="text-2xl font-bold mb-6">Dashboard Overview</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+
+    <div class="p-5 bg-white rounded-xl shadow-card">
+      <h3 class="text-sm text-gray-500">Total Listings</h3>
+      <p class="text-3xl font-bold mt-2">24</p>
+    </div>
+
+    <div class="p-5 bg-white rounded-xl shadow-card">
+      <h3 class="text-sm text-gray-500">Total Purchases</h3>
+      <p class="text-3xl font-bold mt-2">12</p>
+    </div>
+
+    <div class="p-5 bg-white rounded-xl shadow-card">
+      <h3 class="text-sm text-gray-500">Negotiations in Progress</h3>
+      <p class="text-3xl font-bold mt-2">5</p>
+    </div>
+
+    <div class="p-5 bg-white rounded-xl shadow-card">
+      <h3 class="text-sm text-gray-500">Total Earnings / Savings</h3>
+      <p class="text-3xl font-bold mt-2">₹86,200</p>
+    </div>
+
+  </div>
+
+  <!-- CHARTS SECTION -->
+  <h2 class="text-xl font-semibold mb-4">Analytics</h2>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- Line Chart -->
+    <div class="bg-white p-6 rounded-xl shadow-card">
+      <h3 class="text-sm font-semibold mb-4">Transactions Over Time</h3>
+      <canvas id="lineChart"></canvas>
+    </div>
+
+    <!-- Bar Chart -->
+    <div class="bg-white p-6 rounded-xl shadow-card">
+      <h3 class="text-sm font-semibold mb-4">Waste Category Breakdown</h3>
+      <canvas id="barChart"></canvas>
+    </div>
+
+  </div>
+
+  <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- Pie Chart -->
+    <div class="bg-white p-6 rounded-xl shadow-card">
+      <h3 class="text-sm font-semibold mb-4">Earnings Distribution</h3>
+      <canvas id="pieChart"></canvas>
+    </div>
+
+    <!-- Doughnut Chart -->
+    <div class="bg-white p-6 rounded-xl shadow-card">
+      <h3 class="text-sm font-semibold mb-4">Stock Availability</h3>
+      <canvas id="doughnutChart"></canvas>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- JS -->
+<script>
+document.getElementById("profileBtn").onclick = () => {
+  document.getElementById("profileMenu").classList.toggle("hidden");
+};
+
+document.getElementById("sidebarToggle").onclick = () => {
+  const el = document.getElementById("mobileSidebar");
+  el.style.transform = el.style.transform.includes("0")
+    ? "translateX(-100%)"
+    : "translateX(0)";
+};
+
+/* CHARTS */
+const lineCtx = document.getElementById("lineChart");
+new Chart(lineCtx, {
+  type: "line",
+  data: {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+    datasets: [{
+      label: "Transactions",
+      data: [12, 19, 7, 15, 22, 30],
+      borderColor: "#16a34a",
+      backgroundColor: "rgba(22,163,74,0.3)",
+      tension: 0.4
+    }]
+  }
+});
+
+const barCtx = document.getElementById("barChart");
+new Chart(barCtx, {
+  type: "bar",
+  data: {
+    labels: ["Plastic", "Metal", "Paper", "Cardboard", "E-waste"],
+    datasets: [{
+      label: "Qty (kg)",
+      data: [1200, 800, 500, 1500, 300],
+      backgroundColor: ["#16a34a", "#0ea5e9", "#f97316", "#6366f1", "#ef4444"]
+    }]
+  }
+});
+
+const pieCtx = document.getElementById("pieChart");
+new Chart(pieCtx, {
+  type: "pie",
+  data: {
+    labels: ["Plastic", "Metal", "Paper", "E-waste"],
+    datasets: [{
+      data: [30000, 20000, 12000, 24000],
+      backgroundColor: ["#16a34a", "#0ea5e9", "#f97316", "#ef4444"]
+    }]
+  }
+});
+
+const doughnutCtx = document.getElementById("doughnutChart");
+new Chart(doughnutCtx, {
+  type: "doughnut",
+  data: {
+    labels: ["In Stock", "Sold"],
+    datasets: [{
+      data: [65, 35],
+      backgroundColor: ["#22c55e", "#f43f5e"]
+    }]
+  }
+});
+</script>
+
+</body>
+</html>

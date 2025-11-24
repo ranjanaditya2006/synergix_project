@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>How It Works — Waste2Worth</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#ffffff; color:#0f172a; }
+    .wave { background: url('https://www.svgrepo.com/show/494489/wave-top.svg') no-repeat center/cover; height:72px; }
+    .card { background:#fff; border-radius:12px; box-shadow:0 6px 20px rgba(12,18,24,0.06); }
+  </style>
+</head>
+
+<body class="antialiased">
+
+<!-- NAVBAR -->
+<header class="fixed top-0 left-0 right-0 bg-white border-b z-50">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    
+    <!-- Logo -->
+    <a href="index.html" class="text-2xl font-bold text-green-700">Waste2Worth</a>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-700">
+      <a href="index.html" class="hover:text-green-600">Home</a>
+      <a href="marketplace.html" class="hover:text-green-600">Marketplace</a>
+      <a href="how-it-works.html" class="text-green-600 font-semibold">How It Works</a>
+      <a href="about.html" class="hover:text-green-600">About</a>
+      <a href="contact.html" class="hover:text-green-600">Contact</a>
+    </nav>
+
+    <!-- Sell / Buy Buttons — EXACTLY like homepage -->
+    <div class="hidden md:flex items-center gap-4">
+      <a href="buy.html" class="px-5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+        Sell Waste
+      </a>
+
+      <a href="buy.html" class="px-5 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800">
+        Buy Waste
+      </a>
+    </div>
+
+    <!-- mobile menu toggle -->
+    <button id="mobileMenuBtn" class="md:hidden px-3 py-2 bg-gray-100 rounded">☰</button>
+  </div>
+
+  <!-- Mobile dropdown -->
+  <div id="mobileMenu" class="hidden md:hidden border-t bg-white">
+    <div class="px-4 py-3 flex flex-col gap-2">
+      <a href="index.html" class="py-2">Home</a>
+      <a href="how-it-works.html" class="py-2 font-semibold text-green-600">How It Works</a>
+      <a href="marketplace.html" class="py-2">Marketplace</a>
+      <a href="about.html" class="py-2">About</a>
+      <a href="contact.html" class="py-2">Contact</a>
+
+      <div class="flex gap-3 pt-3">
+        <a href="buy.html" class="flex-1 px-5 py-2 bg-green-600 text-white rounded-md">Sell Waste</a>
+        <a href="buy.html" class="flex-1 px-5 py-2 bg-gray-900 text-white rounded-md">Buy Waste</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="pt-28 pb-20 text-center px-6 max-w-6xl mx-auto">
+  <h1 class="text-4xl font-extrabold">How Waste2Worth Works</h1>
+  <p class="mt-4 text-slate-600 max-w-2xl mx-auto">
+    A simple, transparent, AI-powered B2B marketplace connecting waste producers with recyclers and manufacturers.
+  </p>
+</section>
+
+<div class="wave"></div>
+
+<!-- HOW IT WORKS STEPS -->
+<section class="bg-gray-50 py-16">
+  <div class="max-w-6xl mx-auto px-6">
+    <h2 class="text-2xl font-bold text-center mb-10">Step-by-Step Process</h2>
+
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+      <div class="card p-6">
+        <h3 class="text-lg font-semibold">1. Register & Verify</h3>
+        <p class="mt-2 text-slate-600">Create an account as a seller or buyer and complete verification.</p>
+      </div>
+
+      <div class="card p-6">
+        <h3 class="text-lg font-semibold">2. List Waste / Browse Items</h3>
+        <p class="mt-2 text-slate-600">Sellers upload waste details. Buyers explore listings using filters.</p>
+      </div>
+
+      <div class="card p-6">
+        <h3 class="text-lg font-semibold">3. AI Scan & Pricing Suggestion</h3>
+        <p class="mt-2 text-slate-600">Upload a photo — AI scans the waste and suggests market pricing.</p>
+      </div>
+
+      <div class="card p-6">
+        <h3 class="text-lg font-semibold">4. Negotiate Offers</h3>
+        <p class="mt-2 text-slate-600">Use secure in-platform negotiation tools to finalize deals.</p>
+      </div>
+
+      <div class="card p-6">
+        <h3 class="text-lg font-semibold">5. Finalize Transaction</h3>
+        <p class="mt-2 text-slate-600">Confirm deal terms, arrange pickup/logistics, and complete payment.</p>
+      </div>
+
+      <div class="card p-6">
+        <h3 class="text-lg font-semibold">6. Earn or Save</h3>
+        <p class="mt-2 text-slate-600">Sellers earn revenue from waste; buyers save on raw material costs.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="border-t py-8 text-center text-slate-500">
+  © 2025 Waste2Worth — All Rights Reserved
+</footer>
+
+<script>
+  // mobile dropdown toggle
+  document.getElementById('mobileMenuBtn')
+    .addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    });
+</script>
+
+</body>
+</html>

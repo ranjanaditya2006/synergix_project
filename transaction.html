@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete RDF Transaction | Waste2Worth</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #0d1117; color: #c9d1d9;}
+    .container { max-width: 1200px;}
+    .modal-bg { background: rgba(30,41,59,0.55);}
+    .success-ani {background: linear-gradient(135deg, #16a34a 0%, #10b981 100%);}
+    .payment-option { transition: all 0.2s; cursor:pointer; border:2px solid transparent; box-shadow:0 4px 12px rgba(0,0,0,0.3);}
+    .payment-option:hover { border-color:#10b981; transform:translateY(-2px); box-shadow:0 6px 15px rgba(16,185,129,0.20);}
+    input[type="radio"]:checked + .payment-option { border-color: #10b981; background-color: #1f2937;}
+  </style>
+</head>
+<body class="min-h-screen flex justify-center py-10 px-4">
+
+  <div class="container w-full">
+    <header class="mb-8 flex justify-between items-center pb-4 border-b border-gray-700">
+      <h1 class="text-3xl font-extrabold text-white">WASTE<span class="text-green-400">2</span>WORTH</h1>
+      <nav class="text-sm font-medium text-gray-400">
+        <a href="index.html" class="mx-3 hover:text-green-400" id="home-link">Home</a>
+        <a href="#" class="mx-3 text-green-400 border-b-2 border-green-400 pb-1">Transactions</a>
+      </nav>
+    </header>
+
+    <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Transaction Details/Summary (Left pane) -->
+      <div class="lg:col-span-1 space-y-6">
+        <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700">
+          <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+            <i data-feather="file-text" class="w-5 h-5 mr-2 text-green-400"></i>
+            Order Summary
+          </h2>
+          <div class="mb-4">
+            <label for="currency-select" class="block text-sm font-medium text-gray-400 mb-1">Display Currency:</label>
+            <select id="currency-select" class="w-full bg-gray-700 border border-gray-600 text-white text-sm p-2 rounded-lg focus:ring-green-500 focus:border-green-500">
+              <option value="INR" selected>INR - Indian Rupee</option>
+              <option value="USD">USD - US Dollar</option>
+              <option value="EUR">EUR - Euro</option>
+            </select>
+          </div>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between">
+              <span class="text-gray-400">Product:</span>
+              <span class="font-medium text-white" id="prod-val">RDF (Refuse Derived Fuel)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Quantity:</span>
+              <span class="font-medium text-white" id="qty-val">500 MT (Metric Tons)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Unit Price:</span>
+              <span class="font-medium text-white" id="unit-price-display">₹3736.00 / MT</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Seller:</span>
+              <span class="font-medium text-blue-400 hover:text-blue-300 cursor-pointer" id="seller-val">EcoHarvest Inc.</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Delivery Date:</span>
+              <span class="font-medium text-white" id="delivery-val">2024-12-15</span>
+            </div>
+          </div>
+          <div class="border-t border-gray-700 my-4 pt-4 space-y-2">
+            <div class="flex justify-between">
+              <span class="text-gray-400">Subtotal:</span>
+              <span class="font-semibold text-white" id="subtotal-display">₹1,868,000.00</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Carbon Credit Offset (5%):</span>
+              <span class="font-semibold text-green-400" id="offset-display">-₹93,400.00</span>
+            </div>
+            <div class="flex justify-between pt-2">
+              <span class="text-xl font-bold text-white">Total Amount Due:</span>
+              <span class="text-2xl font-extrabold text-green-400" id="total-display">₹1,774,600.00</span>
+            </div>
+            <div class="text-right text-sm text-gray-400 italic">
+              (<span id="secondary-total-display">~ $21,375.00</span> approx.)
+            </div>
+          </div>
+        </div>
+        <div id="withdraw-summary" class="bg-green-900/50 border border-green-700 p-4 mt-2 rounded-lg hidden"></div>
+      </div>
+
+      <!-- Payment/Payment Forms + Action (All features remain) -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700">
+          <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+            <i data-feather="dollar-sign" class="w-6 h-6 mr-3 text-indigo-400"></i>
+            Select Payment Method
+          </h2>
+          <div id="currency-warning" class="bg-yellow-900/50 border border-yellow-700 p-3 rounded-xl mb-4 hidden">
+            <p class="text-sm text-yellow-300 flex items-center">
+              <i data-feather="alert-triangle" class="w-4 h-4 mr-2"></i>
+              <span id="warning-message"></span>
+            </p>
+          </div>
+          <div id="payment-opts" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+          <div class="flex items-center text-sm">
+            <i data-feather="lock" class="w-4 h-4 mr-2 text-green-400"></i>
+            <span class="text-gray-400">Secure transaction encrypted with <span class="text-white font-medium">AES-256.</span></span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="mt-10 text-center text-xs text-gray-600 border-t border-gray-800 pt-6">
+      &copy; 2024 Waste2Worth Digital Marketplace. All Rights Reserved. Blockchain-Verified Transactions.
+    </footer>
+  </div>
+
+  <!-- Modal for Payment method's specific form -->
+  <div id="paymodal-bg" class="modal-bg fixed inset-0 z-50 hidden items-center justify-center">
+    <div id="paymodal-box" class="fade-in bg-gray-800 w-full max-w-lg mx-auto rounded-xl shadow-2xl p-8 border border-gray-600">
+      <div class="flex items-center mb-4 gap-3">
+        <span id="paymodal-logo"></span>
+        <span class="font-bold text-xl text-cyan-300" id="paymodal-title"></span>
+      </div>
+      <form id="modalpayform" class="space-y-5" autocomplete="off"></form>
+      <div class="flex gap-4 justify-end mt-7">
+        <button type="button" class="bg-gray-700 text-white px-5 py-2 rounded-xl font-bold hover:bg-gray-600" onclick="closePayModal()">Cancel</button>
+        <button type="submit" form="modalpayform" class="bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded-xl font-extrabold" id="modalpaybtn">Pay Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Withdraw Success Modal (auto-opens on arrival with withdraw data) -->
+  <div id="withdraw-modal-bg" class="modal-bg fixed inset-0 z-50 hidden items-center justify-center">
+    <div class="fade-in bg-gray-800 w-full max-w-xl mx-auto rounded-xl shadow-2xl p-8 border border-gray-600 flex flex-col items-center">
+      <div class="w-16 h-16 rounded-full flex items-center justify-center mb-3 success-ani">
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
+          <path stroke-width="2" d="M8 12l2 2 4-4"/>
+        </svg>
+      </div>
+      <h3 class="text-2xl font-extrabold mb-3 text-green-200">Transaction Successful</h3>
+      <div id="withdraw-modal-body" class="text-center text-base text-gray-100 mb-3"></div>
+      <div class="flex items-center gap-2 justify-center mb-3">
+        <label for="withdraw-currency-select" class="text-gray-300 ">View in:</label>
+        <select id="withdraw-currency-select" class="rounded bg-gray-700 text-white border border-gray-600 p-1">
+          <option value="INR">INR</option>
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+        </select>
+      </div>
+      <button class="px-5 py-2 rounded-xl bg-green-600 hover:bg-green-500 text-white mt-2 font-bold" onclick="location.href='index.html'">Home</button>
+    </div>
+  </div>
+
+  <!-- Transaction Status Modal (for payment method modals) -->
+  <div id="modal-bg" class="modal-bg fixed inset-0 z-50 hidden items-center justify-center">
+    <div id="modal-box" class="fade-in bg-gray-800 w-full max-w-md mx-auto rounded-xl shadow-2xl p-8 border border-gray-600 flex flex-col items-center">
+      <div id="modal-icon" class="w-16 h-16 rounded-full flex items-center justify-center mb-3"></div>
+      <h3 id="modal-title" class="text-2xl font-bold mb-2"></h3>
+      <div id="modal-body" class="text-center text-base text-gray-300 mb-4"></div>
+      <button class="px-5 py-2 rounded-xl bg-green-600 hover:bg-green-500 text-white mt-2 font-bold" onclick="location.href='index.html'">Home</button>
+    </div>
+  </div>
+
+  <script>
+    feather.replace();
+
+    const INR_TO_USD = 1/83.05, INR_TO_EUR = 0.011; // Update as needed
+    const RATES = {INR: 1, USD: INR_TO_USD, EUR: INR_TO_EUR};
+    const CUR_SYM = {INR: '₹', USD: '$', EUR: '€'};
+
+    function getParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name)||'';
+    }
+    function formatCur(amount, code) {
+      return `${CUR_SYM[code]}${Number(amount).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    }
+
+    // --- Payment methods definition ---
+    const PAYMENT_METHODS = [
+      {
+        id: 'corporate_card', name: 'Corporate Card (Visa/MC)',
+        logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png",
+        form: `<label class="block"><span class="text-gray-300">Cardholder Name</span><input type="text" required class="mt-1 block w-full rounded bg-gray-700 border border-gray-600 text-white p-2"/></label>
+               <label class="block"><span class="text-gray-300">Card Number</span><input type="text" required maxlength="19" class="mt-1 block w-full rounded bg-gray-700 border border-gray-600 text-white p-2" inputmode="numeric"/></label>
+               <div class="grid grid-cols-2 gap-4"><label><span class="text-gray-300">Expiry</span><input type="text" required placeholder="MM/YY" class="mt-1 w-full rounded bg-gray-700 border border-gray-600 text-white p-2"/></label>
+               <label><span class="text-gray-300">CVV</span><input type="password" required maxlength="4" class="mt-1 w-full rounded bg-gray-700 border border-gray-600 text-white p-2"/></label></div>`
+      },
+      {
+        id: 'wire_transfer', name: 'Wire Transfer (ACH/SWIFT)',
+        logo: "https://placehold.co/28x28/1f2937/c9d1d9?text=Bank",
+        form: `<label class="block"><span class="text-gray-300">Bank Name</span><input type="text" required class="mt-1 block w-full rounded bg-gray-700 border border-gray-600 text-white p-2"/></label>
+               <label class="block"><span class="text-gray-300">Account Number / IBAN</span><input type="text" required class="mt-1 block w-full rounded bg-gray-700 border border-gray-600 text-white p-2"/></label>
+               <label class="block"><span class="text-gray-300">SWIFT/BIC Code</span><input type="text" required class="mt-1 block w-full rounded bg-gray-700 border border-gray-600 text-white p-2"/></label>`
+      },
+      {
+        id: 'google_pay', name: 'Google Pay',
+        logo: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Google_Pay_logo.svg",
+        form: `<label class="block"><span class="text-gray-300">Google-Linked Email</span><input type="email" required class="mt-1 block w-full rounded bg-gray-700 border border-gray-600 text-white p-2"/></label>`
+      },
+      {
+        id: 'apple_pay', name: 'Apple Pay',
+        logo: "https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg",
+        form: `<label class="block"><span class="text-gray-300">Apple ID</span><input type="email" required class="mt-1 block w-full rounded bg-gray-700 border border-gray-600 text-white p-2"/></label>`
+      },
+      {
+        id: 'phonepe', name: 'UPI / Digital Wallet',
+        logo: "https://upload.wikimedia.org/wikipedia/commons/c/c2/PhonePe_Logo.svg",
+        form: `<label class="block"><span class="text-gray-300">UPI ID / Wallet</span><input type="text" required class="mt-1 block w-full rounded bg-gray-700 border border-gray-600 text-white p-2"/></label>`
+      },
+      {
+        id: 'usdc_stable', name: 'Cryptocurrency (USDC)',
+        logo: "https://cryptologos.cc/logos/usd-coin-usdc-logo.svg?v=026",
+        form: `<label class="block"><span class="text-gray-300">Wallet Address</span><input type="text" required class="mt-1 block w-full rounded bg-gray-700 border border-gray-600 text-white p-2"/></label>`
+      }
+    ];
+
+    // --- Render Payment Options ---
+    function renderPaymentOptions() {
+      let html = '';
+      PAYMENT_METHODS.forEach((opt, i) => {
+        html += `<input type="radio" id="${opt.id}" name="payment-method" value="${opt.id}" class="hidden" ${i==0?'checked':''}/>
+        <label for="${opt.id}" class="payment-option flex items-start p-4 rounded-xl border border-gray-700 bg-gray-700/50 mt-0 mb-0">
+          <div class="w-8 flex-shrink-0 pt-1"><img src="${opt.logo}" alt="${opt.name}" class="h-6 object-contain"></div>
+          <div class="ml-4 flex-grow">
+            <h3 class="text-lg font-semibold text-white">${opt.name}</h3>
+            <p class="text-xs text-gray-400 mt-1">${opt.desc||opt.name}</p>
+          </div>
+          <div class="ml-auto flex-shrink-0 pt-2"><i data-feather="chevron-right" class="w-5 h-5 text-green-400"></i></div>
+        </label>`;
+      });
+      document.getElementById('payment-opts').innerHTML = html;
+      feather.replace();
+      PAYMENT_METHODS.forEach(opt => {
+        document.querySelector(`label[for="${opt.id}"]`).onclick = ()=>openPayModal(opt);
+      });
+    }
+    renderPaymentOptions();
+
+    // --- Modal Payment Form Logic ---
+    function openPayModal(payopt) {
+      document.getElementById('paymodal-title').innerText = payopt.name;
+      document.getElementById('paymodal-logo').innerHTML = `<img src="${payopt.logo}" class="w-9 h-9 rounded bg-slate-200 p-1 mr-2" alt="">`;
+      document.getElementById('paymodal-bg').classList.remove('hidden');
+      let modalBody = document.getElementById('modalpayform');
+      modalBody.innerHTML = payopt.form;
+      document.getElementById('modalpaybtn').innerText = `Pay Now (${document.getElementById('total-display').textContent})`;
+      modalBody.onsubmit = function(e){
+        e.preventDefault();
+        document.getElementById('paymodal-bg').classList.add('hidden');
+        showResultModal(payopt.name, document.getElementById('total-display').textContent);
+      }
+    }
+    function closePayModal() { document.getElementById('paymodal-bg').classList.add('hidden'); }
+
+    // --- Show transaction result modal ---
+    function showResultModal(method, amount) {
+      const fail = Math.random()<0.06;
+      document.getElementById('modal-bg').classList.remove('hidden');
+      document.getElementById('modal-icon').innerHTML = fail ?
+        `<svg class="w-12 h-12 bg-red-900 rounded-full text-white mb-3" stroke="currentColor" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"></circle><line x1="9" y1="9" x2="15" y2="15" stroke-width="2"></line><line x1="15" y1="9" x2="9" y2="15" stroke-width="2"></line></svg>`
+        :
+        `<svg class="w-12 h-12 success-ani rounded-full text-white mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"></circle><path stroke-width="2" d="M8 12l2 2 4-4"/></svg>`;
+      document.getElementById('modal-title').innerText = fail ? "Transaction Failed" : "Payment Successful";
+      document.getElementById('modal-body').innerHTML =
+        `<div class="text-xl font-extrabold">${amount}</div>
+         <div class="mt-2">Payment Method: <b>${method}</b></div>
+         <div class="mt-2">${fail ? 'Please check your details and try again.' : 'Your transaction is confirmed. Thank you for using Waste2Worth.'}</div>`;
+    }
+    document.getElementById('modal-bg').onclick = function(e) { if(e.target===this) this.classList.add('hidden'); };
+    document.getElementById('paymodal-bg').onclick = function(e) { if(e.target===this) this.classList.add('hidden'); };
+
+    // --- Order Details / Currency Display ---
+    const unitPriceDisplay = document.getElementById('unit-price-display');
+    const subtotalDisplay = document.getElementById('subtotal-display');
+    const offsetDisplay = document.getElementById('offset-display');
+    const totalDisplay = document.getElementById('total-display');
+    const secondaryTotalDisplay = document.getElementById('secondary-total-display');
+    const currencySelect = document.getElementById('currency-select');
+    const currencyWarning = document.getElementById('currency-warning');
+    const warningMessage = document.getElementById('warning-message');
+    function updateCurrencyDisplay() {
+      const cur = currencySelect.value;
+      unitPriceDisplay.textContent = (cur=="INR")?'₹3736.00 / MT':(cur=="USD"?'$45.00 / MT':'€41.40 / MT');
+      subtotalDisplay.textContent = (cur=="INR")?'₹1,868,000.00':(cur=="USD"?'$22,500.00':'€20,700.00');
+      offsetDisplay.textContent   = (cur=="INR")?'-₹93,400.00':(cur=="USD"?'-$1,125.00':'-€1,035.00');
+      totalDisplay.textContent    = (cur=="INR")?'₹1,774,600.00':(cur=="USD"?'$21,375.00':'€19,665.00');
+      secondaryTotalDisplay.textContent = cur=="INR"?"~ $21,375.00":"~ ₹1,774,600.00";
+    }
+    currencySelect.addEventListener('change', function() {
+      updateCurrencyDisplay();
+      if(document.getElementById('withdraw-modal-bg') && !document.getElementById('withdraw-modal-bg').classList.contains('hidden')) {
+        // update withdraw modal payout
+        populateWithdraw(true);
+      }
+    });
+
+    // --- Withdraw Info, Modal, and Live Currency Select ---
+    function populateWithdraw(updatePayoutOnly=false) {
+      const username = getParam('username'), credits = getParam('credits'), usertype = getParam('usertype');
+      const amt = getParam('amount'), impact = getParam('impact');
+      if(username && credits && usertype) {
+        const box = document.getElementById('withdraw-summary');
+        box.classList.remove('hidden');
+        box.innerHTML = `<div class="font-bold text-green-400 mb-1">Withdrawal Details</div>
+          <div class="text-green-200 text-sm">
+            <div>Name: <span>${username}</span></div>
+            <div>User Type: <span>${usertype}</span></div>
+            <div>Credits: <span>${credits}</span></div>
+            <div>Enviro Impact: <span>${impact}</span> tCO₂e</div>
+            <div>Payout (base): <span>${amt}</span></div>
+          </div>`;
+        // Always open modal (or update it) on arrival with data
+        showWithdrawModal({username,credits,usertype,amount:amt,impact}, updatePayoutOnly);
+      }
+    }
+    function showWithdrawModal(data, onlyPayoutUpdate) {
+      const modal = document.getElementById('withdraw-modal-bg');
+      const payoutCur = document.getElementById('withdraw-currency-select').value;
+      const rate = payoutCur==='INR'?1:(payoutCur==='USD'?INR_TO_USD:INR_TO_EUR);
+      const payoutRaw = parseFloat(data.amount||'0');
+      const payoutConv = payoutRaw * rate;
+      const payoutDisplay = formatCur(payoutConv, payoutCur);
+      const txt = `
+      <div class="mb-3">
+        <span class="text-green-300 text-lg font-extrabold">${payoutDisplay}</span>
+        <span class="block text-xs text-gray-400 mt-2">(${data.credits} credits • ${data.impact} tCO₂e)</span>
+      </div>
+      <div class="mb-1 text-base text-green-100 font-medium">
+        This amount is paid to <span class="font-extrabold">${data.username}</span> (${data.usertype}) by Waste2Worth website for verified carbon credits.
+      </div>
+      <div class="text-sm text-green-200 mt-2">Transaction completed. Record this for audit or compliance use.</div>`;
+      document.getElementById('withdraw-modal-body').innerHTML = txt;
+      if(!onlyPayoutUpdate) modal.classList.remove('hidden');
+    }
+    document.getElementById('withdraw-currency-select').addEventListener('change', ()=>populateWithdraw(true));
+    document.getElementById('withdraw-modal-bg').onclick = function(e){ if(e.target===this) this.classList.add('hidden'); }
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      feather.replace();
+      updateCurrencyDisplay();
+      populateWithdraw();
+    });
+  </script>
+</body>
+</html>
