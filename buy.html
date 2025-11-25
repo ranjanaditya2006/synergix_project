@@ -3,484 +3,249 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Waste2Worth — Marketplace</title>
+  <title>Waste2Worth — Marketplace (RDF Only)</title>
   <script src="https://cdn.tailwindcss.com"></script>
-
   <style>
     .glass {
-      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      background: linear-gradient(160deg, rgba(255,255,255,0.09), rgba(255,255,255,0.04));
       backdrop-filter: blur(10px) saturate(140%);
       -webkit-backdrop-filter: blur(10px) saturate(140%);
     }
-    .soft-glow {
-      box-shadow: 0 10px 30px rgba(10,95,60,0.08);
-    }
+    .soft-glow { box-shadow: 0 10px 30px rgba(10,95,60,0.09);}
+    body.dark-mode { background: #101a27 !important; color: #eafff2 !important;}
+    body.dark-mode header, body.dark-mode .bg-white, body.dark-mode .glass, body.dark-mode .soft-glow { background: #172335 !important; color: #eafff2 !important;}
+    body.dark-mode [class*="bg-white/"] { background: #192235 !important; color:#d9eed6 !important; }
+    body.dark-mode .border, body.dark-mode .border-b, body.dark-mode .border-t { border-color: #5ee0be77 !important;}
+    body.dark-mode .bg-emerald-600, body.dark-mode .from-emerald-600 { background: #24b484 !important;}
+    body.dark-mode .text-emerald-900, body.dark-mode .text-emerald-800, body.dark-mode .font-semibold { color: #39ddb1 !important; }
+    body.dark-mode .text-slate-600, body.dark-mode .text-gray-500, body.dark-mode .text-slate-500 { color: #c7fff2 !important;}
+    body.dark-mode input, body.dark-mode select, body.dark-mode textarea { background: #21384d !important; color: #e3fff8 !important; border-color: #44d7af !important;}
+    body.dark-mode #rdfModal .bg-white { background: #223043 !important; color: #eafff2;}
+    #themeToggleBtn {margin-left:10px;}
+    #themeToggleBtn:hover {background: #dafced; color: #1da069;}
+    body.dark-mode #themeToggleBtn:hover {background: #39fea5; color: #101a27;}
   </style>
 </head>
-
-<body class="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100 text-slate-800 antialiased">
+<body class="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100 text-slate-800 antialiased transition-colors duration-300">
 
 <!-- NAVBAR -->
 <header class="sticky top-0 z-40 backdrop-blur bg-white border-b">
-  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-
+  <div class="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-full bg-green-600 flex items-center justify-center font-bold text-white">
-        W2W
-      </div>
-      <span class="font-semibold text-lg text-emerald-800">Waste2Worth</span>
+      <div class="w-9 h-9 rounded-full bg-green-600 flex items-center justify-center font-bold text-white">W2W</div>
+      <span class="font-semibold text-xl text-emerald-800">Waste2Worth</span>
     </div>
-
-    <nav class="hidden md:flex items-center gap-6 text-sm">
+    <nav class="hidden md:flex items-center gap-8 text-base">
       <a href="index.html" class="hover:text-emerald-700">Home</a>
-      <a href="#sell" class="hover:text-emerald-700">Sell Waste</a>
-      <a href="#buy" class="hover:text-emerald-700">Buy Waste</a>
-      <a href="about.html" class="hover:text-emerald-700">About</a>
+      <a href="#sell" class="hover:text-emerald-700">Sell RDF</a>
+      <a href="#buy" class="hover:text-emerald-700">Buy RDF</a>
     </nav>
-
-    <div class="flex items-center gap-3">
-      <button id="sellMainBtn" class="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white px-4 py-2 rounded-lg shadow hover:scale-[1.02] transition">
-        Sell Waste
-      </button>
-    </div>
-
+    <button id="themeToggleBtn" class="bg-slate-100 text-xl rounded-full border border-green-600 px-3 py-2 hover:bg-emerald-100 transition" aria-label="Toggle theme">🌙</button>
   </div>
 </header>
 
 <!-- HERO -->
-<section class="max-w-7xl mx-auto px-6 pt-12 pb-8">
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-
-    <div>
-      <h1 class="text-4xl md:text-5xl font-extrabold text-emerald-900 leading-tight">
-        A modern marketplace for recyclable and industrial waste.
-      </h1>
-      <p class="mt-4 text-lg text-slate-600 max-w-xl">
-        Sell or buy verified, scalable waste materials directly from businesses and certified recyclers.
-      </p>
-
-      <div class="mt-6 flex gap-4">
-        <a href="#sellWaste" id="ctaSell" class="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white px-6 py-3 rounded-lg shadow hover:scale-[1.02] transition">
-          Sell Waste
-        </a>
-
-        <a href="#buyWaste" id="ctaBuy" class="bg-white/70 glass border border-emerald-200 text-emerald-800 px-6 py-3 rounded-lg hover:shadow transition">
-          Buy Waste
-        </a>
-      </div>
-    </div>
-
-    <div class="relative">
-      <div class="absolute -right-8 top-0 w-[300px] h-[300px] rounded-2xl bg-gradient-to-br from-emerald-200/60 to-white/40 blur-xl"></div>
-
-      <div class="glass p-6 rounded-2xl soft-glow border border-emerald-50">
-        <h3 class="text-lg font-semibold text-emerald-900">Quick Access</h3>
-        <p class="text-sm text-slate-500 mt-1">Choose what you want to do.</p>
-
-        <div class="mt-5 grid grid-cols-2 gap-4">
-          <!-- Sell quick -->
-          <button id="quickSellBtn" class="p-4 bg-white/40 glass rounded-xl border text-left hover:scale-[1.02] transition">
-            <span class="font-semibold text-emerald-700 text-lg">Sell</span>
-            <p class="text-xs text-slate-500">List waste fast</p>
-          </button>
-
-          <!-- Buy quick -->
-          <button id="quickBuyBtn" class="p-4 bg-white/40 glass rounded-xl border text-left hover:scale-[1.02] transition">
-            <span class="font-semibold text-emerald-700 text-lg">Buy</span>
-            <p class="text-xs text-slate-500">Browse materials</p>
-          </button>
-        </div>
-      </div>
-    </div>
-
-  </div>
+<section class="max-w-7xl mx-auto px-8 pt-14 pb-8">
+  <h1 class="text-4xl md:text-5xl font-extrabold text-emerald-900 leading-tight">A modern marketplace for RDF waste—Buy &amp; Sell fuel materials efficiently.</h1>
+  <p class="mt-4 text-lg text-slate-600 max-w-2xl">Streamlined for Refuse Derived Fuel (RDF): Connect with sellers and buyers of RDF and related resource streams for energy &amp; industry.</p>
 </section>
 
-<!-- SELL WASTE GRID -->
-<section id="sell" class="max-w-7xl mx-auto px-6 py-12">
-  <h2 class="text-2xl font-semibold text-emerald-900">Sell Waste — Categories</h2>
-
-  <div id="sellWaste" class="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-
-    <!-- Example Category Cards (Sell) -->
-    <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition" data-category="Plastic">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center shadow">
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24"><path d="M4 12h16" stroke="currentColor" stroke-width="1.6"/></svg>
+<main>
+  <!-- SELL RDF CATEGORY GRID -->
+  <section id="sell" class="max-w-7xl mx-auto px-8 py-8">
+    <h2 class="text-2xl font-semibold text-emerald-900 mb-6">Sell Waste — RDF Categories</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      <!-- Card: Mixed Solid RDF -->
+      <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition cursor-pointer" tabindex="0" data-modal-type="sell" data-category="Mixed RDF">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center text-2xl font-bold">RDF</div>
+          <div>
+            <h3 class="text-lg font-semibold text-emerald-900">Mixed RDF</h3>
+            <p class="text-sm text-slate-500">Shredded &amp; baled municipal or industrial RDF.</p>
+          </div>
         </div>
-        <div>
-          <h3 class="text-lg font-semibold text-emerald-900">Plastic</h3>
-          <p class="text-sm text-slate-500 mt-1">Bottles, packaging, PET, HDPE</p>
-          <button data-action="sell" data-cat="Plastic" class="mt-4 bg-white/70 border px-3 py-2 rounded-md text-sm hover:shadow transition">Sell</button>
+        <button class="mt-5 px-4 py-2 rounded-md border text-base font-semibold bg-white/70">Sell</button>
+      </article>
+      <!-- Card: Non-recyclable Plastics -->
+      <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition cursor-pointer" tabindex="0" data-modal-type="sell" data-category="Non-Recyclable Plastics">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center text-xl font-bold">PL</div>
+          <div>
+            <h3 class="text-lg font-semibold text-emerald-900">Non-recyclable Plastics</h3>
+            <p class="text-sm text-slate-500">Films, bags, packaging, composites, MLPs.</p>
+          </div>
         </div>
-      </div>
-    </article>
-
-    <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition" data-category="Metal">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center shadow">
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24"><path d="M5 12h14" stroke="currentColor" stroke-width="1.6"/></svg>
+        <button class="mt-5 px-4 py-2 rounded-md border text-base font-semibold bg-white/70">Sell</button>
+      </article>
+      <!-- Card: Treated/Contaminated Paper & Cardboard -->
+      <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition cursor-pointer" tabindex="0" data-modal-type="sell" data-category="Contaminated Paper & Cardboard">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center text-xl font-bold">PB</div>
+          <div>
+            <h3 class="text-lg font-semibold text-emerald-900">Contaminated Paper/Cardboard</h3>
+            <p class="text-sm text-slate-500">Laminated, coated or greasy packaging & boxes.</p>
+          </div>
         </div>
-        <div>
-          <h3 class="text-lg font-semibold text-emerald-900">Metal</h3>
-          <p class="text-sm text-slate-500 mt-1">Aluminium, steel, copper</p>
-          <button data-action="sell" data-cat="Metal" class="mt-4 bg-white/70 border px-3 py-2 rounded-md text-sm hover:shadow transition">Sell</button>
+        <button class="mt-5 px-4 py-2 rounded-md border text-base font-semibold bg-white/70">Sell</button>
+      </article>
+      <!-- Card: Textiles -->
+      <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition cursor-pointer" tabindex="0" data-modal-type="sell" data-category="Textile Waste">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center text-lg font-bold">TX</div>
+          <div>
+            <h3 class="text-lg font-semibold text-emerald-900">Textile Waste</h3>
+            <p class="text-sm text-slate-500">Mixed cotton, poly, leather, shoes &amp; bags.</p>
+          </div>
         </div>
-      </div>
-    </article>
-
-    <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition" data-category="Paper">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center shadow">
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24"><path d="M7 7h10v10H7z" stroke="currentColor" stroke-width="1.6"/></svg>
+        <button class="mt-5 px-4 py-2 rounded-md border text-base font-semibold bg-white/70">Sell</button>
+      </article>
+      <!-- Card: Wood Waste -->
+      <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition cursor-pointer" tabindex="0" data-modal-type="sell" data-category="Wood Waste">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center text-xl font-bold">WD</div>
+          <div>
+            <h3 class="text-lg font-semibold text-emerald-900">Wood Waste</h3>
+            <p class="text-sm text-slate-500">Treated/discarded pallets, furniture, off-cuts.</p>
+          </div>
         </div>
-        <div>
-          <h3 class="text-lg font-semibold text-emerald-900">Paper</h3>
-          <p class="text-sm text-slate-500 mt-1">Cardboard, sheets, books</p>
-          <button data-action="sell" data-cat="Paper" class="mt-4 bg-white/70 border px-3 py-2 rounded-md text-sm hover:shadow transition">Sell</button>
+        <button class="mt-5 px-4 py-2 rounded-md border text-base font-semibold bg-white/70">Sell</button>
+      </article>
+      <!-- Card: MSW RDF Pellets/Fluff -->
+      <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition cursor-pointer" tabindex="0" data-modal-type="sell" data-category="RDF Pellets/Fluff">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center text-xl font-bold">MSW</div>
+          <div>
+            <h3 class="text-lg font-semibold text-emerald-900">RDF Pellets / Fluff</h3>
+            <p class="text-sm text-slate-500">Loose or pelletized sorted MSW RDF.</p>
+          </div>
         </div>
-      </div>
-    </article>
-
-    <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition" data-category="E-Waste">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center shadow">
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24"><path d="M12 2v20" stroke="currentColor" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <h3 class="text-lg font-semibold text-emerald-900">E-Waste</h3>
-          <p class="text-sm text-slate-500 mt-1">Electronics, batteries</p>
-          <button data-action="sell" data-cat="E-Waste" class="mt-4 bg-white/70 border px-3 py-2 rounded-md text-sm hover:shadow transition">Sell</button>
-        </div>
-      </div>
-    </article>
-
-    <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition" data-category="Glass">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center shadow">
-          <svg class="w-6 h-6" fill="none"><path d="M3 3l18 18" stroke="currentColor" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <h3 class="text-lg font-semibold text-emerald-900">Glass</h3>
-          <p class="text-sm text-slate-500 mt-1">Bottles, cullet</p>
-          <button data-action="sell" data-cat="Glass" class="mt-4 bg-white/70 border px-3 py-2 rounded-md text-sm hover:shadow transition">Sell</button>
-        </div>
-      </div>
-    </article>
-
-    <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition" data-category="Textile">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center shadow">
-          <svg class="w-6 h-6" fill="none"><path d="M4 6h16v12H4z" stroke="currentColor" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <h3 class="text-lg font-semibold text-emerald-900">Textile</h3>
-          <p class="text-sm text-slate-500 mt-1">Fabric, garments</p>
-          <button data-action="sell" data-cat="Textile" class="mt-4 bg-white/70 border px-3 py-2 rounded-md text-sm hover:shadow transition">Sell</button>
-        </div>
-      </div>
-    </article>
-
-    <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition" data-category="Organic">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center shadow">
-          <svg class="w-6 h-6" fill="none"><path d="M12 2c3 3 4 6 4 10" stroke="currentColor" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <h3 class="text-lg font-semibold text-emerald-900">Organic</h3>
-          <p class="text-sm text-slate-500 mt-1">Food waste, garden waste</p>
-          <button data-action="sell" data-cat="Organic" class="mt-4 bg-white/70 border px-3 py-2 rounded-md text-sm hover:shadow transition">Sell</button>
-        </div>
-      </div>
-    </article>
-
-    <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition" data-category="Construction">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center shadow">
-          <svg class="w-6 h-6" fill="none"><path d="M3 12h18M12 3v18" stroke="currentColor" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <h3 class="text-lg font-semibold text-emerald-900">Construction</h3>
-          <p class="text-sm text-slate-500 mt-1">Bricks, cement, debris</p>
-          <button data-action="sell" data-cat="Construction" class="mt-4 bg-white/70 border px-3 py-2 rounded-md text-sm hover:shadow transition">Sell</button>
-        </div>
-      </div>
-    </article>
-
-  </div>
-</section>
-
-<!-- BUY WASTE GRID -->
-<section id="buy" class="max-w-7xl mx-auto px-6 py-12">
-  <h2 class="text-2xl font-semibold text-emerald-900">Buy Waste — Categories</h2>
-
-  <div id="buyWaste" class="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-
-    <!-- Plastic -->
-    <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition" data-category="Plastic">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center shadow">
-          <svg class="w-6 h-6" fill="none"><path d="M4 12h16" stroke="currentColor" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <h3 class="text-lg font-semibold text-emerald-900">Plastic</h3>
-          <p class="text-sm text-slate-500 mt-1">HDPE, PET, PP flakes</p>
-          <button data-action="buy" data-cat="Plastic" class="mt-4 bg-white/70 border px-3 py-2 rounded-md text-sm hover:shadow transition">Buy</button>
-        </div>
-      </div>
-    </article>
-
-    <!-- Metal -->
-    <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition" data-category="Metal">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center shadow">
-          <svg class="w-6 h-6" fill="none"><path d="M5 12h14" stroke="currentColor" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <h3 class="text-lg font-semibold text-emerald-900">Metal</h3>
-          <p class="text-sm text-slate-500 mt-1">Ferrous & non-ferrous</p>
-          <button data-action="buy" data-cat="Metal" class="mt-4 bg-white/70 border px-3 py-2 rounded-md text-sm hover:shadow transition">Buy</button>
-        </div>
-      </div>
-    </article>
-
-    <!-- Paper -->
-    <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition" data-category="Paper">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center shadow">
-          <svg class="w-6 h-6" fill="none"><path d="M7 7h10v10H7z" stroke="currentColor" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <h3 class="text-lg font-semibold text-emerald-900">Paper</h3>
-          <p class="text-sm text-slate-500 mt-1">OCC, mixed, white</p>
-          <button data-action="buy" data-cat="Paper" class="mt-4 bg-white/70 border px-3 py-2 rounded-md text-sm hover:shadow transition">Buy</button>
-        </div>
-      </div>
-    </article>
-
-    <!-- E-Waste -->
-    <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition" data-category="E-Waste">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center shadow">
-          <svg class="w-6 h-6" fill="none"><path d="M12 2v20" stroke="currentColor" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <h3 class="text-lg font-semibold text-emerald-900">E-Waste</h3>
-          <p class="text-sm text-slate-500 mt-1">Boards, components</p>
-          <button data-action="buy" data-cat="E-Waste" class="mt-4 bg-white/70 border px-3 py-2 rounded-md text-sm hover:shadow transition">Buy</button>
-        </div>
-      </div>
-    </article>
-
-    <!-- Glass -->
-    <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition" data-category="Glass">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center shadow">
-          <svg class="w-6 h-6" fill="none"><path d="M3 3l18 18" stroke="currentColor" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <h3 class="text-lg font-semibold text-emerald-900">Glass</h3>
-          <p class="text-sm text-slate-500 mt-1">Bottles & cullet</p>
-          <button data-action="buy" data-cat="Glass" class="mt-4 bg-white/70 border px-3 py-2 rounded-md text-sm hover:shadow transition">Buy</button>
-        </div>
-      </div>
-    </article>
-
-    <!-- Textile -->
-    <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition" data-category="Textile">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center shadow">
-          <svg class="w-6 h-6" fill="none"><path d="M4 6h16v12H4z" stroke="currentColor" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <h3 class="text-lg font-semibold text-emerald-900">Textile</h3>
-          <p class="text-sm text-slate-500 mt-1">Raw & recycled</p>
-          <button data-action="buy" data-cat="Textile" class="mt-4 bg-white/70 border px-3 py-2 rounded-md text-sm hover:shadow transition">Buy</button>
-        </div>
-      </div>
-    </article>
-
-    <!-- Organic -->
-    <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition" data-category="Organic">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center shadow">
-          <svg class="w-6 h-6" fill="none"><path d="M12 2c3 3 4 6 4 10" stroke="currentColor" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <h3 class="text-lg font-semibold text-emerald-900">Organic</h3>
-          <p class="text-sm text-slate-500 mt-1">Compost inputs</p>
-          <button data-action="buy" data-cat="Organic" class="mt-4 bg-white/70 border px-3 py-2 rounded-md text-sm hover:shadow transition">Buy</button>
-        </div>
-      </div>
-    </article>
-
-    <!-- Construction -->
-    <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition" data-category="Construction">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center shadow">
-          <svg class="w-6 h-6" fill="none"><path d="M3 12h18M12 3v18" stroke="currentColor" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <h3 class="text-lg font-semibold text-emerald-900">Construction</h3>
-          <p class="text-sm text-slate-500 mt-1">RMC, aggregates</p>
-          <button data-action="buy" data-cat="Construction" class="mt-4 bg-white/70 border px-3 py-2 rounded-md text-sm hover:shadow transition">Buy</button>
-        </div>
-      </div>
-    </article>
-
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="mt-16 bg-white/60 border-t">
-  <div class="max-w-7xl mx-auto px-6 py-12">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-      <div>
-        <h4 class="font-semibold text-emerald-900 text-lg">Waste2Worth</h4>
-        <p class="text-sm text-slate-500 mt-2">Helping businesses close the loop through circular waste management.</p>
-      </div>
-
-      <div>
-        <h5 class="text-sm font-semibold text-slate-700 mb-3">Quick links</h5>
-        <ul class="space-y-2 text-sm">
-          <li><a href="#" class="hover:text-emerald-700">Pitch deck</a></li>
-          <li><a href="#sell" class="hover:text-emerald-700">Sell Waste</a></li>
-          <li><a href="#buy" class="hover:text-emerald-700">Buy Waste</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <h5 class="text-sm font-semibold text-slate-700 mb-3">Contact</h5>
-        <p class="text-sm text-slate-500">hello@waste2worth.com</p>
-      </div>
+        <button class="mt-5 px-4 py-2 rounded-md border text-base font-semibold bg-white/70">Sell</button>
+      </article>
     </div>
+  </section>
 
-    <div class="border-t mt-10 pt-6 text-sm text-slate-500 flex flex-col md:flex-row items-center justify-between">
-      <p>© Waste2Worth • All rights reserved</p>
-      <p class="mt-3 md:mt-0">Built for a better circular economy</p>
+  <!-- BUY RDF CATEGORY GRID -->
+  <section id="buy" class="max-w-7xl mx-auto px-8 py-8">
+    <h2 class="text-2xl font-semibold text-emerald-900 mb-6">Buy Waste — RDF Categories</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition cursor-pointer" tabindex="0" data-modal-type="buy" data-category="Mixed RDF">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center text-2xl font-bold">RDF</div>
+          <div>
+            <h3 class="text-lg font-semibold text-emerald-900">Mixed RDF</h3>
+            <p class="text-sm text-slate-500">Processed, sorted municipal/industrial RDF bales.</p>
+          </div>
+        </div>
+        <button class="mt-5 px-4 py-2 rounded-md border text-base font-semibold bg-white/70">Buy</button>
+      </article>
+      <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition cursor-pointer" tabindex="0" data-modal-type="buy" data-category="Non-Recyclable Plastics">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center text-xl font-bold">PL</div>
+          <div>
+            <h3 class="text-lg font-semibold text-emerald-900">Non-recyclable Plastics</h3>
+            <p class="text-sm text-slate-500">MLPs, films, bags, high-calorific plastics for TDF/RDF.</p>
+          </div>
+        </div>
+        <button class="mt-5 px-4 py-2 rounded-md border text-base font-semibold bg-white/70">Buy</button>
+      </article>
+      <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition cursor-pointer" tabindex="0" data-modal-type="buy" data-category="Contaminated Paper & Cardboard">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center text-xl font-bold">PB</div>
+          <div>
+            <h3 class="text-lg font-semibold text-emerald-900">Contaminated Paper/Cardboard</h3>
+            <p class="text-sm text-slate-500">Treated, soiled, or packaging-grade cardboard/paper.</p>
+          </div>
+        </div>
+        <button class="mt-5 px-4 py-2 rounded-md border text-base font-semibold bg-white/70">Buy</button>
+      </article>
+      <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition cursor-pointer" tabindex="0" data-modal-type="buy" data-category="Textile Waste">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center text-lg font-bold">TX</div>
+          <div>
+            <h3 class="text-lg font-semibold text-emerald-900">Textile Waste</h3>
+            <p class="text-sm text-slate-500">Poly/cotton scrap, carpet, apparel, industrial textile.</p>
+          </div>
+        </div>
+        <button class="mt-5 px-4 py-2 rounded-md border text-base font-semibold bg-white/70">Buy</button>
+      </article>
+      <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition cursor-pointer" tabindex="0" data-modal-type="buy" data-category="Wood Waste">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center text-xl font-bold">WD</div>
+          <div>
+            <h3 class="text-lg font-semibold text-emerald-900">Wood Waste</h3>
+            <p class="text-sm text-slate-500">Construction, panel, furniture wood cuttings.</p>
+          </div>
+        </div>
+        <button class="mt-5 px-4 py-2 rounded-md border text-base font-semibold bg-white/70">Buy</button>
+      </article>
+      <article class="glass p-6 rounded-2xl border border-emerald-50 soft-glow hover:-translate-y-1 transition cursor-pointer" tabindex="0" data-modal-type="buy" data-category="RDF Pellets/Fluff">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-400 text-white rounded-lg flex items-center justify-center text-xl font-bold">MSW</div>
+          <div>
+            <h3 class="text-lg font-semibold text-emerald-900">RDF Pellets / Fluff</h3>
+            <p class="text-sm text-slate-500">Processed pellets or shredded MSW RDF for fuel.</p>
+          </div>
+        </div>
+        <button class="mt-5 px-4 py-2 rounded-md border text-base font-semibold bg-white/70">Buy</button>
+      </article>
     </div>
+  </section>
+</main>
+
+<footer class="mt-10 bg-white/60 border-t">
+  <div class="max-w-7xl mx-auto px-6 py-10 text-center text-slate-500">
+    © Waste2Worth • All rights reserved
   </div>
 </footer>
 
-<!-- SELL MODAL -->
-<div id="sellModal" class="fixed inset-0 z-50 hidden items-center justify-center px-4">
-  <div class="absolute inset-0 bg-black/40" data-close="sell"></div>
-
-  <div class="relative max-w-2xl w-full bg-white rounded-2xl overflow-hidden shadow-xl glass border border-emerald-50">
+<!-- MODAL DIALOG -->
+<div id="rdfModal" class="fixed inset-0 z-50 hidden items-center justify-center px-4" style="background:rgba(20,28,38,.12);">
+  <div class="absolute inset-0 bg-black/30" data-close="modal"></div>
+  <div class="relative max-w-xl w-full bg-white rounded-2xl overflow-hidden shadow-xl glass border border-emerald-50 modal-content" id="modalContentArea">
     <div class="flex items-center justify-between px-6 py-4 border-b">
-      <h3 class="text-lg font-semibold text-emerald-900" id="sellModalTitle">Sell Waste</h3>
-      <button id="sellModalClose" class="p-2 rounded-md text-slate-600 hover:bg-slate-100">
+      <h3 class="text-xl font-semibold text-emerald-900" id="rdfModalTitle"></h3>
+      <button id="rdfModalClose" class="p-2 rounded-md text-slate-600 hover:bg-slate-100">
         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"><path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       </button>
     </div>
-
-    <form id="sellForm" class="px-6 py-6 grid grid-cols-1 gap-4">
+    <form id="rdfModalForm" class="px-6 py-6 grid grid-cols-1 gap-4">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <label class="flex flex-col text-sm">
           <span class="text-slate-600 text-xs">Category</span>
-          <input id="sellCategory" name="category" class="mt-1 px-3 py-2 rounded-md border bg-white/60 text-sm" />
+          <input id="rdfCategory" name="category" readonly class="mt-1 px-3 py-2 rounded-md border bg-white/60 text-sm" />
         </label>
-
         <label class="flex flex-col text-sm">
-          <span class="text-slate-600 text-xs">Quantity</span>
-          <input name="quantity" placeholder="e.g., 200" class="mt-1 px-3 py-2 rounded-md border text-sm" />
-        </label>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <label class="flex flex-col text-sm">
-          <span class="text-slate-600 text-xs">Unit</span>
-          <select name="unit" class="mt-1 px-3 py-2 rounded-md border text-sm">
-            <option>kg</option>
-            <option>ton</option>
-            <option>piece</option>
-          </select>
-        </label>
-
-        <label class="flex flex-col text-sm">
-          <span class="text-slate-600 text-xs">Condition / Notes</span>
-          <input name="condition" placeholder="e.g., clean, mixed" class="mt-1 px-3 py-2 rounded-md border text-sm" />
-        </label>
-      </div>
-
-      <label class="flex flex-col text-sm">
-        <span class="text-slate-600 text-xs">Pickup / Location</span>
-        <input name="location" placeholder="City, landmark or pin code" class="mt-1 px-3 py-2 rounded-md border text-sm" />
-      </label>
-
-      <label class="flex flex-col text-sm">
-        <span class="text-slate-600 text-xs">Contact (email / phone)</span>
-        <input name="contact" placeholder="Email or phone number" class="mt-1 px-3 py-2 rounded-md border text-sm" />
-      </label>
-
-      <div class="flex items-center justify-between gap-4">
-        <div class="text-sm text-slate-500">We’ll reach out with offers — no obligations.</div>
-        <div class="flex gap-3">
-          <button type="button" id="sellCancel" class="px-4 py-2 rounded-md border text-sm">Cancel</button>
-          <button type="submit" class="px-4 py-2 rounded-md bg-gradient-to-r from-emerald-600 to-emerald-500 text-white text-sm">Submit</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- BUY MODAL -->
-<div id="buyModal" class="fixed inset-0 z-50 hidden items-center justify-center px-4">
-  <div class="absolute inset-0 bg-black/40" data-close="buy"></div>
-
-  <div class="relative max-w-2xl w-full bg-white rounded-2xl overflow-hidden shadow-xl glass border border-emerald-50">
-    <div class="flex items-center justify-between px-6 py-4 border-b">
-      <h3 class="text-lg font-semibold text-emerald-900" id="buyModalTitle">Buy Waste</h3>
-      <button id="buyModalClose" class="p-2 rounded-md text-slate-600 hover:bg-slate-100">
-        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"><path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </button>
-    </div>
-
-    <form id="buyForm" class="px-6 py-6 grid grid-cols-1 gap-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <label class="flex flex-col text-sm">
-          <span class="text-slate-600 text-xs">Category</span>
-          <input id="buyCategory" name="category" class="mt-1 px-3 py-2 rounded-md border bg-white/60 text-sm" />
-        </label>
-
-        <label class="flex flex-col text-sm">
-          <span class="text-slate-600 text-xs">Required Quantity</span>
+          <span class="text-slate-600 text-xs" id="quantityLabel">Required Quantity</span>
           <input name="quantity" placeholder="e.g., 500" class="mt-1 px-3 py-2 rounded-md border text-sm" />
         </label>
       </div>
-
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <label class="flex flex-col text-sm">
           <span class="text-slate-600 text-xs">Unit</span>
           <select name="unit" class="mt-1 px-3 py-2 rounded-md border text-sm">
             <option>kg</option>
             <option>ton</option>
-            <option>piece</option>
+            <option>MT</option>
           </select>
         </label>
-
         <label class="flex flex-col text-sm">
           <span class="text-slate-600 text-xs">Grade / Specs</span>
-          <input name="specs" placeholder="e.g., % purity, flake size" class="mt-1 px-3 py-2 rounded-md border text-sm" />
+          <input name="specs" placeholder="e.g., % purity, ash content" class="mt-1 px-3 py-2 rounded-md border text-sm" />
         </label>
       </div>
-
       <label class="flex flex-col text-sm">
         <span class="text-slate-600 text-xs">Delivery / Location</span>
         <input name="location" placeholder="City, port or plant" class="mt-1 px-3 py-2 rounded-md border text-sm" />
       </label>
-
       <label class="flex flex-col text-sm">
         <span class="text-slate-600 text-xs">Contact (email / phone)</span>
         <input name="contact" placeholder="Email or phone number" class="mt-1 px-3 py-2 rounded-md border text-sm" />
       </label>
-
       <div class="flex items-center justify-between gap-4">
-        <div class="text-sm text-slate-500">We’ll send qualified sellers and quotes.</div>
+        <div class="text-sm text-slate-500" id="modalInfo">We’ll send qualified sellers and quotes.</div>
         <div class="flex gap-3">
-          <button type="button" id="buyCancel" class="px-4 py-2 rounded-md border text-sm">Cancel</button>
-          <button type="submit" class="px-4 py-2 rounded-md bg-gradient-to-r from-emerald-600 to-emerald-500 text-white text-sm">Request Quote</button>
+          <button type="button" id="rdfCancel" class="px-4 py-2 rounded-md border text-sm">Cancel</button>
+          <button type="submit" id="rdfSubmitBtn" class="px-4 py-2 rounded-md bg-gradient-to-r from-emerald-600 to-emerald-500 text-white text-sm">Request Quote</button>
         </div>
       </div>
     </form>
@@ -493,136 +258,83 @@
 </div>
 
 <script>
-  /* Helpers & elements */
-  const sellModal = document.getElementById('sellModal');
-  const buyModal = document.getElementById('buyModal');
-  const sellModalClose = document.getElementById('sellModalClose');
-  const buyModalClose = document.getElementById('buyModalClose');
-  const sellCancel = document.getElementById('sellCancel');
-  const buyCancel = document.getElementById('buyCancel');
-  const sellCategoryInput = document.getElementById('sellCategory');
-  const buyCategoryInput = document.getElementById('buyCategory');
-  const sellForm = document.getElementById('sellForm');
-  const buyForm = document.getElementById('buyForm');
-  const toast = document.getElementById('toast');
-  const toastInner = document.getElementById('toastInner');
-
-  function openModal(type, category) {
-    if (type === 'sell') {
-      sellCategoryInput.value = category || '';
-      document.getElementById('sellModalTitle').textContent = category ? `Sell — ${category}` : 'Sell Waste';
-      sellModal.classList.remove('hidden'); sellModal.classList.add('flex');
-      setTimeout(()=> sellForm.querySelector('[name="quantity"]').focus(),120);
-    } else if (type === 'buy') {
-      buyCategoryInput.value = category || '';
-      document.getElementById('buyModalTitle').textContent = category ? `Buy — ${category}` : 'Buy Waste';
-      buyModal.classList.remove('hidden'); buyModal.classList.add('flex');
-      setTimeout(()=> buyForm.querySelector('[name="quantity"]').focus(),120);
+  // THEME TOGGLE
+  (function() {
+    const btn = document.getElementById('themeToggleBtn');
+    function setTheme(dark) {
+      if (dark) {
+        document.body.classList.add('dark-mode');
+        document.documentElement.classList.add('dark-mode');
+        btn.textContent = '☀️';
+      } else {
+        document.body.classList.remove('dark-mode');
+        document.documentElement.classList.remove('dark-mode');
+        btn.textContent = '🌙';
+      }
     }
-  }
-
-  function closeModal(type) {
-    if (type === 'sell') {
-      sellModal.classList.add('hidden'); sellModal.classList.remove('flex');
-      sellForm.reset(); sellCategoryInput.value = '';
-      document.getElementById('sellModalTitle').textContent = 'Sell Waste';
-    } else if (type === 'buy') {
-      buyModal.classList.add('hidden'); buyModal.classList.remove('flex');
-      buyForm.reset(); buyCategoryInput.value = '';
-      document.getElementById('buyModalTitle').textContent = 'Buy Waste';
-    }
-  }
-
-  function showToast(message='Done') {
-    toastInner.textContent = message;
-    toast.classList.remove('hidden');
-    toast.classList.add('opacity-100');
-    setTimeout(()=> {
-      toast.classList.add('opacity-0');
-    }, 1800);
-    setTimeout(()=> {
-      toast.classList.add('hidden');
-      toast.classList.remove('opacity-0');
-    }, 2300);
-  }
-
-  /* wire top/quick CTAs */
-  document.getElementById('sellMainBtn').addEventListener('click', ()=> openModal('sell'));
-  document.getElementById('quickSellBtn').addEventListener('click', ()=> openModal('sell'));
-  document.getElementById('quickBuyBtn').addEventListener('click', ()=> openModal('buy'));
-  document.getElementById('ctaSell').addEventListener('click', (e)=> { e.preventDefault(); openModal('sell'); });
-  document.getElementById('ctaBuy').addEventListener('click', (e)=> { e.preventDefault(); openModal('buy'); });
-
-  /* wire category Sell buttons */
-  document.querySelectorAll('[data-action="sell"]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const cat = btn.getAttribute('data-cat') || btn.closest('[data-category]')?.dataset.category;
-      openModal('sell', cat);
+    const darkSaved = localStorage.getItem('theme') === 'dark';
+    setTheme(darkSaved);
+    btn.addEventListener('click', function() {
+      const dark = !document.body.classList.contains('dark-mode');
+      setTheme(dark);
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
     });
+  })();
+
+  // MODAL LOGIC
+  document.querySelectorAll('[data-modal-type]').forEach(card => {
+    // Card open modal for either buy/sell
+    card.addEventListener('click', () => openModal(card));
+    card.addEventListener('keydown', (e) => { if(e.key==='Enter'||e.key===' ') openModal(card); });
+    card.querySelector('button').addEventListener('click', e=> { e.stopPropagation(); openModal(card); });
   });
-
-  /* wire category Buy buttons */
-  document.querySelectorAll('[data-action="buy"]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const cat = btn.getAttribute('data-cat') || btn.closest('[data-category]')?.dataset.category;
-      openModal('buy', cat);
-    });
-  });
-
-  /* overlay click to close */
-  document.querySelectorAll('[data-close="sell"]').forEach(el => el.addEventListener('click', ()=> closeModal('sell')));
-  document.querySelectorAll('[data-close="buy"]').forEach(el => el.addEventListener('click', ()=> closeModal('buy')));
-
-  /* modal close buttons */
-  sellModalClose.addEventListener('click', ()=> closeModal('sell'));
-  buyModalClose.addEventListener('click', ()=> closeModal('buy'));
-  sellCancel.addEventListener('click', ()=> closeModal('sell'));
-  buyCancel.addEventListener('click', ()=> closeModal('buy'));
-
-  /* keyboard accessibility: Esc closes */
+  
+  function openModal(card) {
+    const modal = document.getElementById('rdfModal');
+    const title = document.getElementById('rdfModalTitle');
+    const category = card.dataset.category;
+    const type = card.dataset.modalType;
+    title.textContent = (type==='sell' ? "Sell — " : "Buy — ") + category;
+    document.getElementById('rdfCategory').value = category;
+    document.getElementById('quantityLabel').textContent = type==='sell' ? "Available Quantity" : "Required Quantity";
+    document.getElementById('modalInfo').textContent = type==='sell'
+      ? "We’ll reach out with buyers — no obligations."
+      : "We’ll send qualified sellers and quotes.";
+    document.getElementById('rdfSubmitBtn').textContent = type === 'sell' ? "Submit" : "Request Quote";
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    setTimeout(()=> document.getElementById('rdfModalForm').querySelector('[name="quantity"]').focus(),120);
+    document.getElementById('rdfModalForm').dataset.modalType = type;
+  }
+  function closeModal() {
+    document.getElementById('rdfModal').classList.add('hidden');
+    document.getElementById('rdfModal').classList.remove('flex');
+    document.getElementById('rdfModalForm').reset();
+    document.getElementById('rdfModalTitle').textContent = '';
+  }
+  document.getElementById('rdfModalClose').onclick = closeModal;
+  document.getElementById('rdfCancel').onclick = closeModal;
+  document.querySelectorAll('[data-close="modal"]').forEach(el=>el.addEventListener('click', closeModal));
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      if (!sellModal.classList.contains('hidden')) closeModal('sell');
-      if (!buyModal.classList.contains('hidden')) closeModal('buy');
+      const modal = document.getElementById('rdfModal');
+      if (!modal.classList.contains('hidden')) closeModal();
     }
   });
-
-  /* handle Sell form submit (demo: logs payload) */
-  sellForm.addEventListener('submit', (e) => {
+  document.getElementById('rdfModalForm').addEventListener('submit', function(e){
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(sellForm).entries());
-    // Replace the following with a fetch POST to your API
-    console.log('Sell listing payload:', data);
-    closeModal('sell');
-    showToast('Sell listing submitted — we’ll contact you.');
+    const data = Object.fromEntries(new FormData(this).entries());
+    closeModal();
+    showToast((this.dataset.modalType==="sell"? 'Sell listing submitted – we’ll contact you.':'Buy request sent – sellers will respond.'));
   });
 
-  /* handle Buy form submit (demo: logs payload) */
-  buyForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(buyForm).entries());
-    // Replace the following with a fetch POST to your API
-    console.log('Buy request payload:', data);
-    closeModal('buy');
-    showToast('Buy request sent — sellers will respond.');
-  });
-
-  /* allow Enter/Space on focused card to open appropriate modal */
-  document.querySelectorAll('[data-category]').forEach(card => {
-    card.setAttribute('tabindex', '0');
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        // try to detect if inside sell or buy section by parent id
-        const parent = card.closest('section');
-        const cat = card.dataset.category;
-        if (parent && parent.id === 'sell') openModal('sell', cat);
-        else if (parent && parent.id === 'buy') openModal('buy', cat);
-        else openModal('sell', cat);
-      }
-    });
-  });
+  function showToast(message='Done') {
+    const toast = document.getElementById('toast'), toastInner = document.getElementById('toastInner');
+    toastInner.textContent = message;
+    toast.classList.remove('hidden'); toast.classList.add('opacity-100');
+    setTimeout(()=>{toast.classList.add('opacity-0');}, 1800);
+    setTimeout(()=>{toast.classList.add('hidden');toast.classList.remove('opacity-0');}, 2300);
+  }
 </script>
-
 </body>
 </html>

@@ -6,21 +6,38 @@
   <title>How It Works — Waste2Worth</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#ffffff; color:#0f172a; }
+    body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#ffffff; color:#0f172a; transition:background 0.3s,color 0.3s; }
     .wave { background: url('https://www.svgrepo.com/show/494489/wave-top.svg') no-repeat center/cover; height:72px; }
-    .card { background:#fff; border-radius:12px; box-shadow:0 6px 20px rgba(12,18,24,0.06); }
+    .card { background:#fff; border-radius:12px; box-shadow:0 6px 20px rgba(12,18,24,0.06); transition: background 0.3s, color 0.3s;}
+    /* DARK MODE SUPPORT */
+    body.dark-mode { background: #182A37 !important; color: #eafaf2 !important; }
+    body.dark-mode header, body.dark-mode .bg-white, body.dark-mode .card, body.dark-mode .bg-gray-50, body.dark-mode section.bg-gray-50 { background: #223648 !important; color: #eafaf2 !important; }
+    body.dark-mode .text-slate-700, body.dark-mode .text-slate-800, body.dark-mode .text-slate-600, body.dark-mode .text-slate-500 {
+        color: #b8e7d9 !important;
+    }
+    body.dark-mode .border-b, body.dark-mode .border-t { border-color: #127a4b80!important;}
+    body.dark-mode .text-green-700 { color: #44ffd1 !important;}
+    body.dark-mode a, body.dark-mode .hover\:text-green-600:hover { color: #30f0af !important;}
+    body.dark-mode .bg-green-600 { background: #2eb67d !important;}
+    body.dark-mode .bg-gray-900, body.dark-mode .bg-gray-800 { background: #12242c !important;}
+    body.dark-mode .bg-gray-100 { background: #1a2d3b !important; }
+    body.dark-mode .hover\:bg-gray-800:hover { background: #223648 !important; }
+    body.dark-mode .bg-white { background: #223648 !important; }
+    body.dark-mode .bg-slate-50 { background: #294155 !important; }
+    body.dark-mode footer { background: #2a415a !important; color:#b2d9d7 !important;}
+    body.dark-mode .card { background: #263948 !important; color: #eafaf2 !important; box-shadow:0 6px 20px #23d6a040;}
+    body.dark-mode .text-center { color: #eafaf2 !important;}
+    #themeToggleBtn:hover { background: #dcfaf1; color: #147a50; }
+    body.dark-mode #themeToggleBtn:hover { background: #2EB67D; color:#223648;}
   </style>
 </head>
-
-<body class="antialiased">
+<body class="antialiased transition-colors duration-300">
 
 <!-- NAVBAR -->
-<header class="fixed top-0 left-0 right-0 bg-white border-b z-50">
+<header class="fixed top-0 left-0 right-0 bg-white border-b z-50 transition-colors duration-300">
   <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-    
     <!-- Logo -->
     <a href="index.html" class="text-2xl font-bold text-green-700">Waste2Worth</a>
-
     <!-- Desktop Nav -->
     <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-700">
       <a href="index.html" class="hover:text-green-600">Home</a>
@@ -28,36 +45,38 @@
       <a href="how-it-works.html" class="text-green-600 font-semibold">How It Works</a>
       <a href="about.html" class="hover:text-green-600">About</a>
       <a href="contact.html" class="hover:text-green-600">Contact</a>
+      <!-- Theme Toggle Button -->
+      <button
+        id="themeToggleBtn"
+        class="ml-4 px-3 py-2 rounded-full border border-green-600 bg-green-50 text-xl hover:bg-green-200 focus:outline-none transition"
+        aria-label="Theme Toggle">🌙</button>
     </nav>
-
     <!-- Sell / Buy Buttons — EXACTLY like homepage -->
     <div class="hidden md:flex items-center gap-4">
       <a href="buy.html" class="px-5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
         Sell Waste
       </a>
-
       <a href="buy.html" class="px-5 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800">
         Buy Waste
       </a>
     </div>
-
     <!-- mobile menu toggle -->
     <button id="mobileMenuBtn" class="md:hidden px-3 py-2 bg-gray-100 rounded">☰</button>
   </div>
-
   <!-- Mobile dropdown -->
-  <div id="mobileMenu" class="hidden md:hidden border-t bg-white">
+  <div id="mobileMenu" class="hidden md:hidden border-t bg-white transition-colors">
     <div class="px-4 py-3 flex flex-col gap-2">
       <a href="index.html" class="py-2">Home</a>
       <a href="how-it-works.html" class="py-2 font-semibold text-green-600">How It Works</a>
       <a href="marketplace.html" class="py-2">Marketplace</a>
       <a href="about.html" class="py-2">About</a>
       <a href="contact.html" class="py-2">Contact</a>
-
       <div class="flex gap-3 pt-3">
         <a href="buy.html" class="flex-1 px-5 py-2 bg-green-600 text-white rounded-md">Sell Waste</a>
         <a href="buy.html" class="flex-1 px-5 py-2 bg-gray-900 text-white rounded-md">Buy Waste</a>
       </div>
+      <!-- Theme Toggle Button (Mobile) -->
+      <button id="themeToggleBtnMobile" class="mt-6 px-3 py-2 rounded-full border border-green-600 bg-green-50 text-xl hover:bg-green-200 focus:outline-none transition" aria-label="Theme Toggle">🌙</button>
     </div>
   </div>
 </header>
@@ -73,48 +92,40 @@
 <div class="wave"></div>
 
 <!-- HOW IT WORKS STEPS -->
-<section class="bg-gray-50 py-16">
+<section class="bg-gray-50 py-16 transition-colors">
   <div class="max-w-6xl mx-auto px-6">
     <h2 class="text-2xl font-bold text-center mb-10">Step-by-Step Process</h2>
-
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-
       <div class="card p-6">
         <h3 class="text-lg font-semibold">1. Register & Verify</h3>
         <p class="mt-2 text-slate-600">Create an account as a seller or buyer and complete verification.</p>
       </div>
-
       <div class="card p-6">
         <h3 class="text-lg font-semibold">2. List Waste / Browse Items</h3>
         <p class="mt-2 text-slate-600">Sellers upload waste details. Buyers explore listings using filters.</p>
       </div>
-
       <div class="card p-6">
         <h3 class="text-lg font-semibold">3. AI Scan & Pricing Suggestion</h3>
         <p class="mt-2 text-slate-600">Upload a photo — AI scans the waste and suggests market pricing.</p>
       </div>
-
       <div class="card p-6">
         <h3 class="text-lg font-semibold">4. Negotiate Offers</h3>
         <p class="mt-2 text-slate-600">Use secure in-platform negotiation tools to finalize deals.</p>
       </div>
-
       <div class="card p-6">
         <h3 class="text-lg font-semibold">5. Finalize Transaction</h3>
         <p class="mt-2 text-slate-600">Confirm deal terms, arrange pickup/logistics, and complete payment.</p>
       </div>
-
       <div class="card p-6">
         <h3 class="text-lg font-semibold">6. Earn or Save</h3>
         <p class="mt-2 text-slate-600">Sellers earn revenue from waste; buyers save on raw material costs.</p>
       </div>
-
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
-<footer class="border-t py-8 text-center text-slate-500">
+<footer class="border-t py-8 text-center text-slate-500 transition-colors">
   © 2025 Waste2Worth — All Rights Reserved
 </footer>
 
@@ -124,7 +135,38 @@
     .addEventListener('click', () => {
       document.getElementById('mobileMenu').classList.toggle('hidden');
     });
-</script>
 
+  // THEME TOGGLE LOGIC
+  function setTheme(dark) {
+    if(dark){
+      document.body.classList.add('dark-mode');
+      document.documentElement.classList.add('dark-mode');
+      document.getElementById('themeToggleBtn').textContent = '☀️';
+      if(document.getElementById('themeToggleBtnMobile')) document.getElementById('themeToggleBtnMobile').textContent = '☀️';
+    } else {
+      document.body.classList.remove('dark-mode');
+      document.documentElement.classList.remove('dark-mode');
+      document.getElementById('themeToggleBtn').textContent = '🌙';
+      if(document.getElementById('themeToggleBtnMobile')) document.getElementById('themeToggleBtnMobile').textContent = '🌙';
+    }
+  }
+  // init theme from localStorage
+  const darkSaved = localStorage.getItem('theme') === 'dark';
+  setTheme(darkSaved);
+
+  // Listen for both desktop and mobile toggle
+  document.getElementById('themeToggleBtn').addEventListener('click', function(){
+    const dark = !document.body.classList.contains('dark-mode');
+    setTheme(dark);
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+  });
+  if(document.getElementById('themeToggleBtnMobile')) {
+    document.getElementById('themeToggleBtnMobile').addEventListener('click', function(){
+      const dark = !document.body.classList.contains('dark-mode');
+      setTheme(dark);
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    });
+  }
+</script>
 </body>
 </html>

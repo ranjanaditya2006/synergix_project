@@ -4,22 +4,72 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>About Us — Waste2Worth</title>
-
 <!-- Tailwind CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
     theme: {
       extend: {
-        colors: { eco: { green: '#2EB67D', forest: '#157A4B', mint: '#E8F7F0' } },
+        colors: {
+          eco: { green: '#2EB67D', forest: '#157A4B', mint: '#E8F7F0' },
+          darkbg: '#182A37',
+          darkpanel: '#223648',
+        },
         fontFamily: { sans: ['Inter','sans-serif'] }
       }
     }
   };
 </script>
+<style>
+/* DARK MODE Styles */
+body.dark-mode, html.dark-mode {
+  background: #182A37 !important;
+  color: #eafaf2 !important;
+}
+body.dark-mode .bg-white,
+body.dark-mode .bg-gray-50,
+body.dark-mode .bg-eco-mint {
+  background: #223648 !important;
+  color: #eafaf2 !important;
+  border-color: #2EB67D40 !important;
+}
+body.dark-mode .border,
+body.dark-mode .border-gray-200,
+body.dark-mode .border-eco-green\/20 {
+  border-color: #167a4b40 !important;
+}
+body.dark-mode .text-eco-forest,
+body.dark-mode .font-semibold,
+body.dark-mode .font-bold {
+  color: #32ffb9 !important;
+}
+body.dark-mode .text-slate-700,
+body.dark-mode .text-slate-800,
+body.dark-mode .text-slate-600,
+body.dark-mode .text-slate-500 {
+  color: #aac8c2 !important;
+}
+body.dark-mode .shadow,
+body.dark-mode .shadow-sm,
+body.dark-mode .hover\:shadow-lg {
+  box-shadow: 0 2px 22px #167a4b40 !important;
+}
+body.dark-mode a, body.dark-mode a:hover {
+  color: #3bbf8f !important;
+}
+body.dark-mode footer,
+body.dark-mode .bg-slate-100 {
+  background: #203648 !important;
+  color: #b2ddca !important;
+}
+body.dark-mode .border-t { border-color: #167a4b40 !important; }
+body.dark-mode .rounded-3xl { background: #223648 !important; }
+/* Theme button hover */
+#themeToggleBtn:hover { background: #E8F7F0; color: #157A4B; }
+body.dark-mode #themeToggleBtn:hover { background: #2EB67D; color:#223648;}
+</style>
 </head>
-
-<body class="bg-gray-50 font-sans text-slate-800">
+<body class="bg-gray-50 font-sans text-slate-800 transition-colors duration-300">
 
 <!-- NAVBAR -->
 <header class="bg-white shadow sticky top-0 z-50">
@@ -31,13 +81,14 @@
         <div class="text-xs text-slate-500">Circular materials marketplace</div>
       </div>
     </div>
-
     <nav class="flex items-center gap-6 text-sm">
       <a href="index.html" class="hover:text-eco-forest transition">Home</a>
       <a href="marketplace.html" class="hover:text-eco-forest transition">Marketplace</a>
       <a href="about.html" class="text-eco-forest font-semibold">About</a>
       <a href="how it works.html" class="text-eco-forest font-semibold">How it Works</a>
       <a href="contact.html" class="hover:text-eco-forest transition">Contact</a>
+      <!-- Theme Toggle Button -->
+      <button id="themeToggleBtn" class="ml-4 px-3 py-2 rounded-full border border-eco-green bg-eco-mint text-xl hover:bg-eco-green focus:outline-none transition" aria-label="Theme Toggle">🌙</button>
     </nav>
   </div>
 </header>
@@ -54,7 +105,6 @@
           smarter and more transparent.
         </p>
       </div>
-
       <div class="flex-1 flex justify-center">
         <img src="https://cdn-icons-png.flaticon.com/512/9896/9896888.png"
              alt="eco illustration"
@@ -71,7 +121,7 @@
     <p class="text-slate-700 leading-relaxed">
       We believe that every piece of waste has value when connected to the right people.
       Waste2Worth focuses on giving industries, small businesses and recyclers a trusted platform
-      where they can buy, sell and repurpose materials responsibly.  
+      where they can buy, sell and repurpose materials responsibly.
       Our mission is to make sustainability accessible, profitable and user-friendly.
     </p>
   </div>
@@ -80,9 +130,7 @@
 <!-- TEAM SECTION -->
 <section class="max-w-6xl mx-auto px-5 mt-14 pb-20">
   <h2 class="text-3xl font-bold text-eco-forest text-center mb-10">Meet Our Team</h2>
-
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-
     <!-- Leader -->
     <div class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition border border-gray-200">
       <img src="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
@@ -90,11 +138,10 @@
       <h3 class="text-xl font-semibold text-center mt-4">Team Leader</h3>
       <p class="text-center text-slate-500 text-sm mt-1">Backend Developer</p>
       <p class="text-center text-sm text-slate-600 mt-3">
-        The visionary behind the Waste2Worth idea.  
+        The visionary behind the Waste2Worth idea.
         Handles backend development, database structure, and core logic.
       </p>
     </div>
-
     <!-- Frontend Dev -->
     <div class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition border border-gray-200">
       <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"
@@ -102,11 +149,10 @@
       <h3 class="text-xl font-semibold text-center mt-4">Frontend Developer</h3>
       <p class="text-center text-slate-500 text-sm mt-1">UI Implementation</p>
       <p class="text-center text-sm text-slate-600 mt-3">
-        Builds the entire user interface of the website.  
+        Builds the entire user interface of the website.
         Ensures smooth user experience and modern responsive layouts.
       </p>
     </div>
-
     <!-- UI/UX Designer -->
     <div class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition border border-gray-200">
       <img src="https://cdn-icons-png.flaticon.com/512/3001/3001764.png"
@@ -114,11 +160,10 @@
       <h3 class="text-xl font-semibold text-center mt-4">UI/UX Designer</h3>
       <p class="text-center text-slate-500 text-sm mt-1">Design & Branding</p>
       <p class="text-center text-sm text-slate-600 mt-3">
-        Creates clean, modern eco-themed designs.  
+        Creates clean, modern eco-themed designs.
         Works on layout structure, branding colors and usability flow.
       </p>
     </div>
-
     <!-- Data & Deployment -->
     <div class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition border border-gray-200">
       <img src="https://cdn-icons-png.flaticon.com/512/883/883807.png"
@@ -126,11 +171,10 @@
       <h3 class="text-xl font-semibold text-center mt-4">Data & Deployment Engineer</h3>
       <p class="text-center text-slate-500 text-sm mt-1">Hosting & Analytics</p>
       <p class="text-center text-sm text-slate-600 mt-3">
-        Manages deployment, hosting optimization, analytics setup  
+        Manages deployment, hosting optimization, analytics setup
         and ensures the platform runs fast & stable.
       </p>
     </div>
-
   </div>
 </section>
 
@@ -141,7 +185,6 @@
         <h3 class="text-lg font-semibold text-slate-700">Waste2Worth</h3>
         <p class="text-sm text-slate-500 mt-2">Enabling a smooth B2B circular economy.</p>
       </div>
-
       <div>
         <h4 class="text-sm font-semibold text-slate-700 mb-3">Quick links</h4>
         <ul class="space-y-2">
@@ -149,7 +192,6 @@
           <li><a href="#" class="text-sm text-slate-600 hover:text-green-600 transition">Privacy policy</a></li>
         </ul>
       </div>
-
       <div>
         <h4 class="text-sm font-semibold text-slate-700 mb-3">Connect</h4>
         <div class="flex items-center gap-4">
@@ -158,7 +200,6 @@
         </div>
       </div>
     </div>
-
     <div class="border-t mt-10 pt-6 flex flex-col md:flex-row items-center justify-between">
       <p class="text-sm text-slate-500">© Waste2Worth • All rights reserved</p>
       <p class="text-sm text-slate-500 mt-3 md:mt-0">Built for a better circular economy</p>
@@ -166,5 +207,30 @@
   </div>
 </footer>
 
+<!-- THEME TOGGLE SCRIPT -->
+<script>
+(function(){
+  const btn = document.getElementById('themeToggleBtn');
+  function setTheme(dark) {
+    if (dark) {
+      document.body.classList.add('dark-mode');
+      document.documentElement.classList.add('dark-mode');
+      btn.textContent = '☀️';
+    } else {
+      document.body.classList.remove('dark-mode');
+      document.documentElement.classList.remove('dark-mode');
+      btn.textContent = '🌙';
+    }
+  }
+  // Load saved preference
+  const darkSaved = localStorage.getItem('theme') === 'dark';
+  setTheme(darkSaved);
+  btn.addEventListener('click', function(){
+    const dark = !document.body.classList.contains('dark-mode');
+    setTheme(dark);
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+  });
+})();
+</script>
 </body>
 </html>

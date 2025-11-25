@@ -11,15 +11,80 @@
   tailwind.config = {
     theme: {
       extend: {
-        colors: { eco: { green: '#2EB67D', forest: '#157A4B', mint: '#E8F7F0' } },
+        colors: {
+          eco: {
+            green: '#2EB67D',
+            forest: '#157A4B',
+            mint: '#E8F7F0'
+          },
+          darkbg: '#182A37',
+          darkpanel: '#223648',
+        },
         fontFamily: { sans: ['Inter','sans-serif'] }
       }
     }
   };
 </script>
+<style>
+body.dark-mode, html.dark-mode {
+  background: #182A37 !important;
+  color: #eafaf2 !important;
+}
+body.dark-mode .bg-white,
+body.dark-mode .bg-gray-50,
+body.dark-mode .bg-eco-mint {
+  background: #223648 !important;
+  color: #effffc !important;
+  border-color: #2eb67d40 !important;
+}
+body.dark-mode .bg-slate-50,
+body.dark-mode .p-4.bg-slate-50,
+body.dark-mode input,
+body.dark-mode textarea {
+  background: #294155 !important;
+  color: #eafaf2 !important;
+  border-color: #2eb67d80 !important;
+}
+body.dark-mode .border-gray-200,
+body.dark-mode .border-eco-green\/20 {
+  border-color: #167a4b40 !important;
+}
+body.dark-mode .rounded-3xl,
+body.dark-mode .rounded-2xl {
+  background: #223648 !important;
+}
+body.dark-mode .text-eco-forest,
+body.dark-mode .font-semibold,
+body.dark-mode .font-bold {
+  color: #2ee5a0 !important;
+}
+body.dark-mode .text-slate-800,
+body.dark-mode .text-slate-700,
+body.dark-mode .text-slate-600,
+body.dark-mode .text-slate-500 {
+  color: #aac8c2 !important;
+}
+body.dark-mode .hover\:bg-eco-forest:hover,
+body.dark-mode .bg-eco-green,
+body.dark-mode .hover\:text-eco-forest:hover {
+  background: #157A4B !important;
+  color: #eafaf2 !important;
+}
+body.dark-mode .bg-eco-mint, body.dark-mode .w-12.bg-eco-mint {
+  background: #2eb67d33 !important;
+}
+body.dark-mode footer,
+body.dark-mode .bg-slate-100 {
+  background: #203648 !important;
+  color: #b2ddca !important;
+}
+body.dark-mode .border-t { border-color: #167a4b40 !important; }
+#themeToggleBtn:hover { background: #e8f7f0; color: #157A4B; }
+body.dark-mode #themeToggleBtn:hover { background: #2EB67D; color:#223648;}
+</style>
 </head>
 
-<body class="bg-gray-50 font-sans text-slate-800">
+<body class="bg-gray-50 font-sans text-slate-800 transition-colors duration-300">
 
 <!-- NAVBAR -->
 <header class="bg-white shadow sticky top-0 z-50">
@@ -31,12 +96,13 @@
         <div class="text-xs text-slate-500">Circular materials marketplace</div>
       </div>
     </div>
-
     <nav class="flex items-center gap-6 text-sm">
       <a href="index.html" class="hover:text-eco-forest transition">Home</a>
       <a href="marketplace.html" class="hover:text-eco-forest transition">Marketplace</a>
       <a href="about.html" class="hover:text-eco-forest transition">About</a>
       <a href="contact.html" class="text-eco-forest font-semibold">Contact</a>
+      <!-- Theme Toggle Button -->
+      <button id="themeToggleBtn" class="ml-4 px-3 py-2 rounded-full border border-eco-green bg-eco-mint text-xl hover:bg-eco-green focus:outline-none transition" aria-label="Theme Toggle">🌙</button>
     </nav>
   </div>
 </header>
@@ -48,12 +114,11 @@
       <div class="flex-1">
         <h1 class="text-4xl font-bold text-eco-forest">Contact Us</h1>
         <p class="text-slate-600 mt-4 leading-relaxed text-lg">
-          Have questions, partnership requests or business inquiries?  
-          Our team is here to help you turn waste into worth.  
+          Have questions, partnership requests or business inquiries?
+          Our team is here to help you turn waste into worth.
           Reach out anytime — we'll respond within 24 hours.
         </p>
       </div>
-
       <div class="flex-1 flex justify-center">
         <img src="https://cdn-icons-png.flaticon.com/512/9131/9131549.png"
              class="w-64 h-64 object-contain" alt="contact illustration" />
@@ -64,16 +129,12 @@
 
 <!-- CONTACT INFO + FORM -->
 <section class="max-w-6xl mx-auto px-5 mt-4 pb-20">
-
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-
     <!-- LEFT: Contact details -->
     <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-200">
       <h2 class="text-2xl font-semibold text-eco-forest">Get in Touch</h2>
       <p class="text-slate-600 mt-2">We're always ready to help.</p>
-
       <div class="mt-6 space-y-6">
-
         <div class="flex gap-4">
           <div class="w-12 h-12 bg-eco-mint rounded-xl flex items-center justify-center">
             <img src="https://cdn-icons-png.flaticon.com/512/535/535239.png" class="w-6 h-6" />
@@ -86,7 +147,6 @@
             </p>
           </div>
         </div>
-
         <div class="flex gap-4">
           <div class="w-12 h-12 bg-eco-mint rounded-xl flex items-center justify-center">
             <img src="https://cdn-icons-png.flaticon.com/512/725/725643.png" class="w-6 h-6" />
@@ -96,7 +156,6 @@
             <p class="text-sm text-slate-500 mt-1">support@waste2worth.co</p>
           </div>
         </div>
-
         <div class="flex gap-4">
           <div class="w-12 h-12 bg-eco-mint rounded-xl flex items-center justify-center">
             <img src="https://cdn-icons-png.flaticon.com/512/455/455705.png" class="w-6 h-6" />
@@ -106,7 +165,6 @@
             <p class="text-sm text-slate-500 mt-1">+91 98765 43210</p>
           </div>
         </div>
-
         <div class="flex gap-4">
           <div class="w-12 h-12 bg-eco-mint rounded-xl flex items-center justify-center">
             <img src="https://cdn-icons-png.flaticon.com/512/1827/1827272.png" class="w-6 h-6" />
@@ -116,43 +174,56 @@
             <p class="text-sm text-slate-500 mt-1">Mon - Sat, 9:00 AM - 7:00 PM</p>
           </div>
         </div>
-
       </div>
     </div>
-
     <!-- RIGHT: Contact Form -->
     <div class="lg:col-span-2 bg-white p-8 rounded-3xl shadow-sm border border-gray-200">
       <h2 class="text-2xl font-semibold text-eco-forest mb-6">Send Us a Message</h2>
-
       <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
         <input type="text" placeholder="Your Name"
                class="p-4 border rounded-xl bg-slate-50 focus:ring-2 focus:ring-eco-green">
-
         <input type="email" placeholder="Your Email"
                class="p-4 border rounded-xl bg-slate-50 focus:ring-2 focus:ring-eco-green">
-
         <input type="text" placeholder="Phone Number"
                class="p-4 border rounded-xl bg-slate-50 focus:ring-2 focus:ring-eco-green">
-
         <input type="text" placeholder="Subject"
                class="p-4 border rounded-xl bg-slate-50 focus:ring-2 focus:ring-eco-green">
-
         <textarea placeholder="Write your message..."
                   rows="5"
                   class="md:col-span-2 p-4 border rounded-xl bg-slate-50 focus:ring-2 focus:ring-eco-green"></textarea>
-
         <button type="submit"
                 class="md:col-span-2 bg-eco-green hover:bg-eco-forest text-white py-3 rounded-xl text-lg font-medium transition">
           Send Message
         </button>
-
       </form>
     </div>
-
   </div>
-
 </section>
+
+<script>
+(function(){
+  const btn = document.getElementById('themeToggleBtn');
+  function setTheme(dark) {
+    if (dark) {
+      document.body.classList.add('dark-mode');
+      document.documentElement.classList.add('dark-mode');
+      btn.textContent = '☀️';
+    } else {
+      document.body.classList.remove('dark-mode');
+      document.documentElement.classList.remove('dark-mode');
+      btn.textContent = '🌙';
+    }
+  }
+  // Load saved preference
+  const darkSaved = localStorage.getItem('theme') === 'dark';
+  setTheme(darkSaved);
+  btn.addEventListener('click', function(){
+    const dark = !document.body.classList.contains('dark-mode');
+    setTheme(dark);
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+  });
+})();
+</script>
 
 </body>
 </html>

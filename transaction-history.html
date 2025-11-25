@@ -1,177 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Transaction History – Waste2Worth</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://cdn.tailwindcss.com"></script>
-
-<style>
-body { background: #f7f9fb; font-family: 'Inter', sans-serif; }
-.sidebar-item:hover { background: #eef3ff; }
-.active-item { background: #e0e7ff !important; font-weight: 600; }
-.shadow-card { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-#mobileSidebar { transition: transform 0.3s ease; }
-</style>
-
+  <meta charset="UTF-8">
+  <title>Transaction History – Waste2Worth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: #f7f9fb; font-family: 'Inter', sans-serif; }
+    .shadow-card { box-shadow: 0 4px 20px rgba(7,36,78,0.11); }
+    .sidebar-item { color: #212d3a; transition: background .15s; }
+    .sidebar-item:hover { background: #eef3ff; }
+    .active-item { background: #e0e7ff !important; color: #222 !important; font-weight: 700; }
+    #mobileSidebar { transition: transform 0.3s ease; }
+    .badge { display: inline-block; padding: 0.18em 0.8em; border-radius: 8px; font-size: 0.95em; font-weight: 600; letter-spacing:0.01em;}
+    .badge-green { background: #e0f7e9; color: #207c47; }
+    .badge-yellow { background: #f8f5c6; color: #aa9a1d; }
+    .badge-red { background: #fbeaea; color: #bb212e; }
+    .badge-blue { background: #e5ebfa; color: #215cf8; }
+    table th { color: #334155; }
+    body.dark-mode { background: #151d2b !important; color: #eaf5ff !important;}
+    body.dark-mode .bg-white, body.dark-mode .shadow-card { background: #1b2233 !important; color: #eaf5ff !important;}
+    body.dark-mode .border, body.dark-mode .border-b { border-color: #2de5a388 !important;}
+    body.dark-mode .sidebar-item:hover { background: #1a2235 !important; }
+    body.dark-mode .active-item { background: #1ddfa430 !important; color: #39f5b4 !important; }
+    body.dark-mode .sidebar-item { color: #eaf5ff !important; }
+    body.dark-mode input, body.dark-mode select, body.dark-mode textarea { background: #26314d !important; color: #eafff6 !important; border-color: #39f5b4 !important;}
+    body.dark-mode .bg-gray-100 { background: #203251 !important; color: #eaf5ff !important;}
+    body.dark-mode .hover\:bg-gray-100:hover { background: #2bbd70 !important; color: #fff !important;}
+    body.dark-mode .badge-green { background: #214d37 !important; color: #38f4ac !important; }
+    body.dark-mode .badge-yellow { background: #413609 !important; color: #f1eb62 !important;}
+    body.dark-mode .badge-red { background: #412626 !important; color: #ed4e78 !important;}
+    body.dark-mode .badge-blue { background: #1e2740 !important; color: #4b8cf6 !important;}
+    body.dark-mode th { color: #eaf5ff !important; background: #1b2233 !important; }
+    body.dark-mode table { background: #1b2233 !important;}
+    #carbon-credit-headline { color: #1e3a8a; }
+    body.dark-mode #carbon-credit-headline { color: #60a5fa; }
+  </style>
 </head>
-<body class="text-gray-800">
+<body class="text-gray-800 transition-colors duration-300">
 
-<!-- TOP NAVBAR -->
-<nav class="w-full bg-white border-b fixed top-0 left-0 z-50 shadow-sm">
-  <div class="max-w-7xl mx-auto px-6">
-    <div class="flex items-center justify-between h-16">
-
-      <!-- Back Button -->
-      <a href="marketplace.html" class="text-sm px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md flex items-center gap-2">
-        ◀ Back to Marketplace
-      </a>
-
-      <!-- Search -->
-      <div class="hidden md:flex items-center w-1/3">
-        <input type="text" placeholder="Search transactions..." class="w-full px-4 py-2 rounded-md bg-gray-100 border border-gray-200">
-      </div>
-
-      <!-- Right Section -->
-      <div class="flex items-center gap-6">
-
-        <!-- Notifications -->
-        <button class="relative">
-          <span class="material-icons text-gray-600">🔔</span>
-          <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-600 rounded-full"></span>
-        </button>
-
-        <!-- Profile -->
-        <div class="relative">
-          <button id="profileBtn" class="flex items-center gap-2">
-            <img src="https://i.pravatar.cc/150?img=32" class="w-9 h-9 rounded-full">
-            <span class="font-medium">Sam</span>
-          </button>
-
-          <div id="profileMenu" class="hidden absolute right-0 mt-2 bg-white border rounded-lg shadow-lg w-48">
-            <a href="account-settings.html" class="block px-4 py-2 hover:bg-gray-100">Profile Settings</a>
-            <a href="account-settings.html" class="block px-4 py-2 hover:bg-gray-100">Account Settings</a>
-            <a href="help-support.html" class="block px-4 py-2 hover:bg-gray-100">Help & Support</a>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 text-red-600">Logout</a>
-          </div>
+  <!-- TOP NAVBAR -->
+  <nav class="w-full bg-white border-b fixed top-0 left-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex items-center justify-between h-16">
+        <a href="marketplace.html" class="text-sm px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md flex items-center gap-2">◀ Back to Marketplace</a>
+        <div class="hidden md:flex items-center w-1/3">
+          <input id="searchInput" type="text" placeholder="Search transactions..." class="w-full px-4 py-2 rounded-md bg-gray-100 border border-gray-200">
         </div>
-
-        <!-- Mobile Sidebar Button -->
-        <button id="sidebarToggle" class="lg:hidden px-3 py-2 rounded-md bg-gray-100">☰</button>
+        <div class="flex items-center gap-6">
+          <button class="relative">
+            <span class="material-icons text-gray-600">🔔</span>
+            <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-600 rounded-full"></span>
+          </button>
+          <div class="relative">
+            <button id="profileBtn" class="flex items-center gap-2">
+              <span class="w-9 h-9 inline-flex items-center justify-center rounded-full bg-emerald-200 text-emerald-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <circle cx="12" cy="9" r="3" stroke="currentColor" stroke-width="1.5"/>
+                  <path stroke="currentColor" stroke-width="1.5" d="M16.2 16a4.2 4.2 0 0 0-8.4 0"/>
+                </svg>
+              </span>
+              <span class="font-medium">User Login</span>
+            </button>
+            <div id="profileMenu" class="hidden absolute right-0 mt-2 bg-white border rounded-lg shadow-lg w-48">
+              <a href="account-settings.html" class="block px-4 py-2 hover:bg-gray-100">Profile Settings</a>
+              <a href="account-settings.html" class="block px-4 py-2 hover:bg-gray-100">Account Settings</a>
+              <a href="help-support.html" class="block px-4 py-2 hover:bg-gray-100">Help & Support</a>
+              <a href="#" class="block px-4 py-2 hover:bg-gray-100 text-red-600">Logout</a>
+            </div>
+          </div>
+          <button id="themeToggleBtn" class="bg-gray-100 text-xl rounded-full border border-green-600 px-3 py-2 transition hover:bg-green-50" aria-label="Theme toggle">🌙</button>
+          <button id="sidebarToggle" class="lg:hidden px-3 py-2 rounded-md bg-gray-100">☰</button>
+        </div>
       </div>
     </div>
-  </div>
-</nav>
-
-<!-- SIDEBAR -->
-<aside class="hidden lg:block w-64 bg-white fixed top-16 left-0 h-screen border-r shadow-sm">
-  <nav class="py-4 text-sm">
-    <a href="dashboard.html" class="sidebar-item block px-6 py-3">Dashboard Overview</a>
-    <a href="my listing.html" class="sidebar-item block px-6 py-3">My Listings</a>
-    <a href="transaction-history.html" class="sidebar-item active-item block px-6 py-3">Transaction History</a>
-    <a href="analytics-reports.html" class="sidebar-item block px-6 py-3">Analytics & Reports</a>
-    <a href="account-settings.html" class="sidebar-item block px-6 py-3">Account & Settings</a>
-    <a href="help-support.html" class="sidebar-item block px-6 py-3">Help & Support</a>
   </nav>
-</aside>
 
-<!-- MOBILE SIDEBAR -->
-<aside id="mobileSidebar" class="lg:hidden fixed top-16 left-0 w-64 bg-white h-screen border-r shadow-md transform -translate-x-full">
-  <nav class="py-4 text-sm">
-    <a href="dashboard.html" class="sidebar-item block px-6 py-3">Dashboard Overview</a>
-    <a href="my listing.html" class="sidebar-item block px-6 py-3">My Listings</a>
-    <a href="transaction-history.html" class="sidebar-item active-item block px-6 py-3">Transaction History</a>
-    <a href="analytics-reports.html" class="sidebar-item block px-6 py-3">Analytics & Reports</a>
-    <a href="account-settings.html" class="sidebar-item block px-6 py-3">Account & Settings</a>
-    <a href="help-support.html" class="sidebar-item block px-6 py-3">Help & Support</a>
-  </nav>
-</aside>
+  <!-- Fixed SIDEBAR for desktop: w-64, bg-white, pt from navbar -->
+  <aside class="hidden lg:block w-64 bg-white fixed top-16 left-0 h-screen border-r shadow-sm z-30">
+    <nav class="py-4 text-sm">
+      <a href="dashboard.html" class="sidebar-item block px-6 py-3">Dashboard Overview</a>
+      <a href="my listing.html" class="sidebar-item block px-6 py-3">My Listings</a>
+      <a href="transaction-history.html" class="sidebar-item active-item block px-6 py-3">Transaction History</a>
+      <a href="analytics-reports.html" class="sidebar-item block px-6 py-3">Analytics & Reports</a>
+      <a href="account-settings.html" class="sidebar-item block px-6 py-3">Account & Settings</a>
+      <a href="help-support.html" class="sidebar-item block px-6 py-3">Help & Support</a>
+    </nav>
+  </aside>
 
-<!-- MAIN CONTENT -->
-<main class="ml-0 lg:ml-64 pt-24 px-6 pb-12">
+  <!-- MOBILE SIDEBAR for small screens, matches styling -->
+  <aside id="mobileSidebar" class="lg:hidden fixed top-16 left-0 w-64 bg-white h-screen border-r shadow-md transform -translate-x-full">
+    <nav class="py-4 text-sm">
+      <a href="dashboard.html" class="sidebar-item block px-6 py-3">Dashboard Overview</a>
+      <a href="my listing.html" class="sidebar-item block px-6 py-3">My Listings</a>
+      <a href="transaction-history.html" class="sidebar-item active-item block px-6 py-3">Transaction History</a>
+      <a href="analytics-reports.html" class="sidebar-item block px-6 py-3">Analytics & Reports</a>
+      <a href="account-settings.html" class="sidebar-item block px-6 py-3">Account & Settings</a>
+      <a href="help-support.html" class="sidebar-item block px-6 py-3">Help & Support</a>
+    </nav>
+  </aside>
 
-  <h1 class="text-2xl font-bold mb-6">Transaction History</h1>
+  <!-- MAIN CONTENT -->
+  <main class="ml-0 lg:ml-64 pt-24 px-6 pb-12">
+    <h1 class="text-2xl font-bold mb-6">Transaction History</h1>
+    <!-- FILTERS -->
+    <div class="p-5 bg-white rounded-xl shadow-card mb-6 flex flex-col md:flex-row gap-4 md:items-center" id="filterSection">
+      <label class="text-sm font-medium">Date Range:</label>
+      <input type="date" id="dateFrom" class="p-2 border rounded-md">
+      <input type="date" id="dateTo" class="p-2 border rounded-md">
+      <label class="text-sm font-medium md:ml-6">Material:</label>
+      <select class="p-2 border rounded-md" id="materialSelect">
+        <option>All</option>
+        <option>Plastic (Non-recyclable)</option>
+        <option>MSW RDF</option>
+        <option>SRF (Solid Recovered Fuel)</option>
+        <option>Textiles</option>
+        <option>Wood Waste</option>
+        <option>Treated Cardboard/Paper</option>
+        <option>Rubber</option>
+        <option>Composites (MLP etc)</option>
+        <option>Organic</option>
+        <option>Agricultural Residue</option>
+        <option>Pellets/Fluff</option>
+      </select>
+      <button id="applyFilter" class="ml-auto px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Apply Filter</button>
+    </div>
 
-  <!-- FILTERS -->
-  <div class="p-5 bg-white rounded-xl shadow-card mb-6 flex flex-col md:flex-row gap-4 md:items-center">
+    <!-- TRANSACTION TABLE -->
+    <div class="bg-white rounded-xl shadow-card overflow-x-auto mb-12">
+      <table class="w-full" id="transactionTable">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="p-3 text-left">Item</th>
+            <th class="p-3 text-left">Company/User</th>
+            <th class="p-3 text-left">Quantity</th>
+            <th class="p-3 text-left">Amount</th>
+            <th class="p-3 text-left">Status</th>
+            <th class="p-3 text-left">Date</th>
+          </tr>
+        </thead>
+        <tbody id="transactionRows"></tbody>
+      </table>
+    </div>
 
-    <label class="text-sm font-medium">Date Range:</label>
-    <input type="date" class="p-2 border rounded-md">
-    <input type="date" class="p-2 border rounded-md">
+    <!-- CARBON CREDIT TRANSACTION HISTORY -->
+    <div class="rounded-2xl bg-white border-t-4 border-blue-700 shadow-xl p-8 mb-12">
+      <div class="flex items-center gap-3 mb-6">
+        <img src="logos.png" class="w-12 h-12 rounded" />
+        <span id="carbon-credit-headline" class="text-2xl font-black">Carbon Credit Withdrawals</span>
+      </div>
+      <div class="overflow-x-auto rounded-lg shadow">
+        <table class="w-full min-w-[520px] border rounded-xl" id="carbonTable">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="p-2">Txn ID</th>
+              <th class="p-2">Name</th>
+              <th class="p-2">Credits</th>
+              <th class="p-2">CO₂ Offset</th>
+              <th class="p-2">Amount</th>
+              <th class="p-2">Date</th>
+            </tr>
+          </thead>
+          <tbody id="txn-list"></tbody>
+        </table>
+        <div id="empty-msg" class="text-center text-gray-400 my-8 hidden">No carbon withdrawals from dashboard.</div>
+      </div>
+    </div>
+  </main>
 
-    <label class="text-sm font-medium md:ml-6">Material:</label>
-    <select class="p-2 border rounded-md">
-      <option>All</option>
-      <option>Plastic</option>
-      <option>Metal</option>
-      <option>Paper</option>
-      <option>E-waste</option>
-    </select>
+  <script>
+    document.getElementById("profileBtn").onclick = () => {
+      document.getElementById("profileMenu").classList.toggle("hidden");
+    };
+    document.getElementById("sidebarToggle").onclick = () => {
+      const el = document.getElementById("mobileSidebar");
+      el.style.transform = el.style.transform.includes("0")
+        ? "translateX(-100%)"
+        : "translateX(0)";
+    };
+    // Theme toggle logic
+    (function() {
+      const btn = document.getElementById('themeToggleBtn');
+      function setTheme(dark) {
+        if (dark) {
+          document.body.classList.add('dark-mode');
+          document.documentElement.classList.add('dark-mode');
+          btn.textContent = '☀️';
+        } else {
+          document.body.classList.remove('dark-mode');
+          document.documentElement.classList.remove('dark-mode');
+          btn.textContent = '🌙';
+        }
+      }
+      const darkSaved = localStorage.getItem('theme') === 'dark';
+      setTheme(darkSaved);
+      btn.addEventListener('click', function() {
+        const dark = !document.body.classList.contains('dark-mode');
+        setTheme(dark);
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      });
+    })();
 
-    <button class="ml-auto px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-      Apply Filter
-    </button>
+    const transactions = [
+      { item: "Plastic (Non-recyclable)", company: "EcoSphere Plastics", quantity: "800 kg", amount: 18900, status: "Completed", date: "2025-02-12" },
+      { item: "MSW RDF Pellets", company: "PowerFuel Ltd.", quantity: "1200 kg", amount: 24840, status: "Pending", date: "2025-02-10" },
+      { item: "Textile Waste", company: "GreenFuture LLP", quantity: "650 kg", amount: 27200, status: "Cancelled", date: "2025-02-08" },
+      { item: "Treated Cardboard/Paper", company: "RenewPak Solutions", quantity: "1550 kg", amount: 19400, status: "Completed", date: "2025-01-28" },
+      { item: "SRF (Solid Recovered Fuel)", company: "AltFuel Energy", quantity: "210 kg", amount: 11600, status: "Completed", date: "2025-01-20" },
+      { item: "Wood Waste", company: "ClearGo Tech", quantity: "910 kg", amount: 14760, status: "Pending", date: "2025-01-17" },
+      { item: "Rubber", company: "Rubber RecycleWorks", quantity: "350 kg", amount: 10940, status: "Completed", date: "2025-01-16" },
+      { item: "Composites (MLP etc)", company: "CompoCare Pvt Ltd", quantity: "730 kg", amount: 23800, status: "Completed", date: "2025-01-15" },
+      { item: "Agricultural Residue", company: "AgroWaste India", quantity: "1100 kg", amount: 13200, status: "Pending", date: "2025-01-13" },
+      { item: "Pellets/Fluff", company: "PelletPower Industries", quantity: "500 kg", amount: 11300, status: "Completed", date: "2025-01-10" }
+    ];
 
-  </div>
+    function filterTransactions(material, fromDate, toDate, searchText) {
+      return transactions.filter(tr => {
+        const trDate = new Date(tr.date);
+        const matchMaterial = (material==="All") || tr.item.indexOf(material)!==-1 || tr.item===material;
+        const matchFrom = !fromDate || trDate >= new Date(fromDate);
+        const matchTo = !toDate || trDate <= new Date(toDate);
+        const matchSearch = !searchText || (
+          tr.item.toLowerCase().includes(searchText) ||
+          tr.company.toLowerCase().includes(searchText)
+        );
+        return matchMaterial && matchFrom && matchTo && matchSearch;
+      });
+    }
 
-  <!-- TRANSACTION TABLE -->
-  <div class="bg-white rounded-xl shadow-card overflow-x-auto">
-    <table class="w-full">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="p-3 text-left">Item</th>
-          <th class="p-3 text-left">Quantity</th>
-          <th class="p-3 text-left">Amount</th>
-          <th class="p-3 text-left">Status</th>
-          <th class="p-3 text-left">Date</th>
-        </tr>
-      </thead>
+    function renderTransactions(rows) {
+      const tb = document.getElementById("transactionRows");
+      tb.innerHTML = "";
+      rows.forEach(tr => {
+        tb.innerHTML += `
+          <tr class="border-b ${tr.status==='Pending'?'bg-gray-700/10':''}">
+            <td class="p-3">${tr.item}</td>
+            <td class="p-3">${tr.company}</td>
+            <td class="p-3">${tr.quantity}</td>
+            <td class="p-3 text-blue-700 font-bold">₹${tr.amount.toLocaleString()}</td>
+            <td class="p-3"><span class="badge badge-${tr.status.toLowerCase()}">${tr.status}</span></td>
+            <td class="p-3">${new Date(tr.date).toLocaleDateString("en-GB",{day:'2-digit',month:'short',year:'numeric'})}</td>
+          </tr>`;
+      });
+    }
+    renderTransactions(transactions);
 
-      <tbody>
+    document.getElementById("applyFilter").onclick = () => {
+      const material = document.getElementById("materialSelect").value;
+      const dateFrom = document.getElementById("dateFrom").value;
+      const dateTo = document.getElementById("dateTo").value;
+      const searchText = (document.getElementById("searchInput")?.value||"").trim().toLowerCase();
+      renderTransactions(filterTransactions(material, dateFrom, dateTo, searchText));
+    };
+    document.getElementById("searchInput").oninput = () => {
+      document.getElementById("applyFilter").click();
+    };
 
-        <tr class="border-b">
-          <td class="p-3">HDPE Scrap</td>
-          <td class="p-3">800 kg</td>
-          <td class="p-3">₹17,600</td>
-          <td class="p-3 text-green-600 font-semibold">Completed</td>
-          <td class="p-3">12 Feb 2025</td>
-        </tr>
-
-        <tr class="border-b">
-          <td class="p-3">Cardboard</td>
-          <td class="p-3">2400 kg</td>
-          <td class="p-3">₹28,800</td>
-          <td class="p-3 text-yellow-600 font-semibold">Pending</td>
-          <td class="p-3">28 Jan 2025</td>
-        </tr>
-
-        <tr>
-          <td class="p-3">Metal Scrap</td>
-          <td class="p-3">600 kg</td>
-          <td class="p-3">₹25,000</td>
-          <td class="p-3 text-red-600 font-semibold">Cancelled</td>
-          <td class="p-3">10 Jan 2025</td>
-        </tr>
-
-      </tbody>
-    </table>
-  </div>
-
-</main>
-
-<!-- JS -->
-<script>
-document.getElementById("profileBtn").onclick = () => {
-  document.getElementById("profileMenu").classList.toggle("hidden");
-};
-
-document.getElementById("sidebarToggle").onclick = () => {
-  const el = document.getElementById("mobileSidebar");
-  el.style.transform = el.style.transform.includes("0")
-    ? "translateX(-100%)"
-    : "translateX(0)";
-};
-</script>
-
+    const carbonTxns = [
+      { id: "TXN-10421", name: "GreenTech Ltd.", credits: 225, offset: 225, amount: 18450, date: "15 Feb 2025" },
+      { id: "TXN-10732", name: "Waste2Value Solutions", credits: 140, offset: 140, amount: 11200, date: "11 Feb 2025" },
+      { id: "TXN-11001", name: "EcoTrade Pvt. Ltd.", credits: 89, offset: 89, amount: 7120, date: "8 Feb 2025" },
+      { id: "TXN-11345", name: "Urban Recycle Group", credits: 313, offset: 313, amount: 25040, date: "3 Feb 2025" },
+      { id: "TXN-12480", name: "CleanLoop Inc.", credits: 412, offset: 412, amount: 32960, date: "25 Jan 2025" },
+      { id: "TXN-80169", name: "Your Name", credits: 197, offset: 197, amount: 15760, date: "25/11/2025, 21:12:50" }
+    ];
+    let tbody = document.getElementById('txn-list');
+    let empty = document.getElementById('empty-msg');
+    tbody.innerHTML = "";
+    for(let txn of carbonTxns){
+      let row = document.createElement("tr");
+      row.innerHTML = `
+        <td class="text-blue-800 font-semibold py-2 px-2">${txn.id}</td>
+        <td class="font-bold">${txn.name}</td>
+        <td class="text-blue-600 font-bold">${txn.credits}</td>
+        <td>${txn.offset} tCO₂e</td>
+        <td class="text-green-700 font-bold">₹${txn.amount.toLocaleString()}</td>
+        <td class="text-blue-400 font-bold">${txn.date}</td>`;
+      tbody.appendChild(row);
+    }
+    if(carbonTxns.length === 0){
+      empty.classList.remove('hidden');
+    }
+  </script>
 </body>
 </html>
