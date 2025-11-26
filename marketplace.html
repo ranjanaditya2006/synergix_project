@@ -143,7 +143,8 @@
           </button>
 
 
-          <a href="#" class="px-4 py-2 rounded-md text-sm btn-primary hover:opacity-95">Login</a>
+         <a href="#" id="loginBtn" class="px-4 py-2 rounded-md text-sm btn-primary hover:opacity-95">Login</a>
+
           <a href="dashboard.html" class="ml-3 px-3 py-2 rounded-md text-sm border border-gray-100 bg-white">Dashboard</a>
         </div>
         <button id="mobileMenuBtn" aria-label="menu" class="p-2 rounded-md bg-white border border-gray-100 shadow-sm lg:hidden">☰</button>
@@ -409,6 +410,35 @@
     </div>
   </div>
 </footer>
+<!-- LOGIN MODAL -->
+<div id="loginModal" 
+     style="position:fixed; inset:0; background:rgba(0,0,0,0.45); 
+     display:none; align-items:center; justify-content:center; z-index:99999;">
+
+  <div style="background:white; padding:28px; border-radius:14px; width:90%; max-width:380px;">
+    <h2 style="font-size:22px; font-weight:700; color:#16934a; text-align:center;">Sign In</h2>
+
+    <label style="font-size:14px; margin-top:12px; display:block;">Email</label>
+    <input id="loginEmail" type="email" 
+           style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+
+    <label style="font-size:14px; margin-top:12px; display:block;">Password</label>
+    <input id="loginPass" type="password" 
+           style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+
+    <button id="loginSubmit"
+            style="margin-top:18px; width:100%; background:#16934a; color:white; padding:12px; border-radius:8px; font-weight:700;">
+      Sign In
+    </button>
+
+    <button onclick="closeLoginModal()" 
+            style="margin-top:10px; width:100%; background:#eee; padding:10px; border-radius:8px;">
+      Close
+    </button>
+  </div>
+
+</div>
+
 
 <!-- ---------------------------
      JavaScript: data, rendering, filters and interactions
@@ -1061,6 +1091,23 @@ try{
     gsap.from(card, { y:12, opacity:0, duration:0.6, delay: 0.06*i, scrollTrigger:{ trigger: card, start: 'top 90%', toggleActions: 'play none none none' } });
   });
 } catch(e){ console.warn('GSAP failed (nonfatal)', e); }
+// --- LOGIN SYSTEM (SAME AS HOMEPAGE) ---
+function openLoginModal() {
+  document.getElementById("loginModal").style.display = "flex";
+}
+function closeLoginModal() {
+  document.getElementById("loginModal").style.display = "none";
+}
+
+document.getElementById("loginBtn").onclick = openLoginModal;
+
+document.getElementById("loginSubmit").onclick = () => {
+  closeLoginModal();
+  setTimeout(() => {
+    window.location.href = "index.html";
+  }, 300);
+};
+
 
 </script>
 </body>

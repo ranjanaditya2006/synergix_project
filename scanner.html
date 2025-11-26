@@ -1,92 +1,136 @@
 <!DOCTYPE html>
 <html lang="en" class="">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Waste2Worth | Waste Scanner</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=swap" rel="stylesheet" />
   <script>
     tailwind.config = {
-      darkMode: 'class',
+      darkMode: "class",
       theme: {
         extend: {
           colors: {
-            accent: '#22c55e',
-            darkbg: '#10141f',
-            carddark: '#182234',
-            cardlight: '#fff'
-          }
-        }
-      }
-    }
+            accent: "#22c55e",
+            darkbg: "#10141f",
+            carddark: "#182234",
+            cardlight: "#fff",
+          },
+        },
+      },
+    };
   </script>
 </head>
 <body class="bg-gray-50 dark:bg-darkbg font-inter min-h-screen transition-colors">
   <!-- Header -->
-  <header class="w-full px-7 py-6 bg-white dark:bg-carddark shadow-sm flex flex-row items-center justify-between border-b border-gray-200 dark:border-gray-900">
+  <header
+    class="w-full px-7 py-6 bg-white dark:bg-carddark shadow-sm flex flex-row items-center justify-between border-b border-gray-200 dark:border-gray-900"
+  >
     <div class="flex items-center gap-3">
-      <img src="logos.png" class="w-11 h-11" alt="logo">
+      <img src="logos.png" class="w-11 h-11" alt="logo" />
       <span class="text-2xl font-extrabold text-accent dark:text-blue-400 tracking-wide">Waste2Worth Scanner AI</span>
     </div>
     <nav class="flex items-center gap-5">
-      <a href="/" class="px-4 py-2 rounded-lg bg-accent text-white font-semibold hover:bg-green-700 focus:outline-none transition">← Back to Website</a>
+      <a
+        href="/"
+        class="px-4 py-2 rounded-lg bg-accent text-white font-semibold hover:bg-green-700 focus:outline-none transition"
+        >← Back to Website</a
+      >
       <!-- Theme toggle -->
-      <button id="toggle-mode" class="ml-2 rounded-xl px-3 py-2 bg-blue-100 dark:bg-gray-900 transition" aria-label="Toggle theme">
+      <button
+        id="toggle-mode"
+        class="ml-2 rounded-xl px-3 py-2 bg-blue-100 dark:bg-gray-900 transition"
+        aria-label="Toggle theme"
+      >
         <span id="mode-icon">
-          <svg viewBox="0 0 32 32" width="24" height="24" fill="#22c55e"><circle cx="16" cy="16" r="7"/></svg>
+          <svg viewBox="0 0 32 32" width="24" height="24" fill="#22c55e"><circle cx="16" cy="16" r="7" /></svg>
         </span>
       </button>
     </nav>
   </header>
 
-  <main class="w-full flex flex-col md:flex-row justify-center items-start md:items-center px-4 py-10 gap-10 transition-colors">
+  <main
+    class="w-full flex flex-col md:flex-row justify-center items-start md:items-center px-4 py-10 gap-10 transition-colors"
+  >
     <!-- Upload & Scan Card -->
-    <section class="max-w-md w-full bg-cardlight dark:bg-carddark rounded-2xl shadow-lg border border-accent dark:border-blue-800 px-8 py-8 flex flex-col gap-5">
+    <section
+      class="max-w-md w-full bg-cardlight dark:bg-carddark rounded-2xl shadow-lg border border-accent dark:border-blue-800 px-8 py-8 flex flex-col gap-5"
+    >
       <h2 class="text-lg font-bold text-accent dark:text-blue-400 mb-2">Step 1: Upload / Take waste image</h2>
       <label class="block w-full flex flex-col items-center gap-2 cursor-pointer" id="upload-label">
-        <span class="w-28 h-28 flex items-center justify-center bg-gray-100 dark:bg-gray-900 rounded-full border-4 border-accent dark:border-blue-400 shadow-md mb-2 transition-colors">
-          <svg width="52" height="52" fill="none"><circle cx="26" cy="26" r="14" fill="#22c55e"/><circle cx="26" cy="26" r="8" fill="#fff"/></svg>
+        <span
+          class="w-28 h-28 flex items-center justify-center bg-gray-100 dark:bg-gray-900 rounded-full border-4 border-accent dark:border-blue-400 shadow-md mb-2 transition-colors"
+        >
+          <svg width="52" height="52" fill="none">
+            <circle cx="26" cy="26" r="14" fill="#22c55e" />
+            <circle cx="26" cy="26" r="8" fill="#fff" />
+          </svg>
         </span>
         <span class="text-accent dark:text-blue-400 font-semibold mb-2">Click icon to upload image</span>
         <input id="imginput" type="file" accept="image/*" capture="environment" class="hidden" />
       </label>
       <img id="imgprev" src="" alt="" class="w-full h-44 object-cover rounded-xl mt-2 hidden" />
-      <button id="do-scan" class="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-accent text-white font-bold rounded-lg shadow hover:from-green-600 hover:to-blue-900 hidden transition-colors mt-1 flex items-center justify-center">
+      <button
+        id="do-scan"
+        class="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-accent text-white font-bold rounded-lg shadow hover:from-green-600 hover:to-blue-900 hidden transition-colors mt-1 flex items-center justify-center"
+      >
         <span id="scan-btn-text">Scan Waste</span>
-        <svg id="scan-spinner" class="w-5 h-5 ml-3 hidden animate-spin" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="4" opacity=".3"/><path d="M12 2 a10 10 0 0 1 10 10" stroke="#22c55e" stroke-width="4"/></svg>
+        <svg
+          id="scan-spinner"
+          class="w-5 h-5 ml-3 hidden animate-spin"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="4" opacity=".3" />
+          <path d="M12 2 a10 10 0 0 1 10 10" stroke="#22c55e" stroke-width="4" />
+        </svg>
       </button>
       <div id="error" class="text-red-500 dark:text-red-400 text-center font-bold min-h-[2rem] mb-3 hidden"></div>
-      <button id="reset" class="w-full px-5 py-2 mt-2 bg-accent text-white font-semibold rounded-lg hover:bg-green-700 transition-colors">Try Another</button>
+      <button
+        id="reset"
+        class="w-full px-5 py-2 mt-2 bg-accent text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
+      >
+        Try Another
+      </button>
     </section>
 
     <!-- Results/certificate & standards card -->
     <section class="max-w-xl w-full flex flex-col gap-7">
       <!-- Improved certificate: issued for is editable waste type, scan works -->
-      <div id="result-block" class="bg-white dark:bg-carddark border border-accent dark:border-blue-800 rounded-2xl shadow-md px-7 py-8 hidden">
+      <div
+        id="result-block"
+        class="bg-white dark:bg-carddark border border-accent dark:border-blue-800 rounded-2xl shadow-md px-7 py-8 hidden"
+      >
         <div class="flex items-center gap-3 mb-3">
-          <img src="logos.png" class="w-10 h-10 mr-2 rounded-lg shadow" alt="logo">
+          <img src="logos.png" class="w-10 h-10 mr-2 rounded-lg shadow" alt="logo" />
           <span class="font-extrabold text-accent dark:text-blue-400 text-xl">Waste2Worth Quality Certificate</span>
         </div>
         <div class="flex items-center justify-start mb-1">
           <span class="font-bold text-gray-900 dark:text-gray-100 text-[1.15rem] mr-2">Issued for:</span>
-          <input id="cert-issuedfor" type="text"
-                 class="font-bold text-accent dark:text-blue-400 bg-transparent border-b-2 border-accent dark:border-blue-400 px-2 py-[2px] text-lg focus:outline-none w-[220px]"
-                 value="Unknown Waste" />
+          <input
+            id="cert-issuedfor"
+            type="text"
+            class="font-bold text-accent dark:text-blue-400 bg-transparent border-b-2 border-accent dark:border-blue-400 px-2 py-[2px] text-lg focus:outline-none w-[220px]"
+            value="Unknown Waste"
+          />
         </div>
         <div class="mb-2 text-sm text-gray-500 dark:text-blue-300">
-          Certificate #: <span id="cert-id"></span><br>
+          Certificate #: <span id="cert-id"></span><br />
           Issued Date: <span id="cert-date"></span>
         </div>
         <div class="flex items-center justify-start mb-2">
           <span class="font-bold text-blue-800 dark:text-blue-300 text-[1.07rem] mr-2">Type of Waste Scanned:</span>
-          <input id="waste-type"
-                 type="text"
-                 class="font-bold text-blue-700 dark:text-blue-400 bg-transparent border-b-2 border-blue-700 dark:border-blue-400 px-2 py-[2px] text-[1.07rem] focus:outline-none w-[220px]"
-                 value="Unknown Waste" />
+          <input
+            id="waste-type"
+            type="text"
+            class="font-bold text-blue-700 dark:text-blue-400 bg-transparent border-b-2 border-blue-700 dark:border-blue-400 px-2 py-[2px] text-[1.07rem] focus:outline-none w-[220px]"
+            value="Unknown Waste"
+          />
         </div>
         <div class="mb-2 font-semibold text-green-700 dark:text-blue-300">
-          Quality Determined: <span id="cert-quality">Complies with RDF Fuel Standard (SRF/RDF)</span>
+          Quality Determined:
+          <span id="cert-quality">Complies with RDF Fuel Standard (SRF/RDF)</span>
         </div>
         <div class="mb-3">
           <span class="font-bold text-accent dark:text-blue-400">Verified Parameters:</span>
@@ -117,114 +161,165 @@
           This certificate authenticates the waste sample as verified by Waste2Worth AI Scanner in compliance with listed standards.
         </p>
         <div class="flex gap-3 mt-4">
-          <button id="download" class="bg-blue-800 dark:bg-accent text-white px-5 py-2 rounded-lg font-bold shadow hover:bg-blue-900 dark:hover:bg-green-700 transition-colors">Download Certificate</button>
-          <button id="share" class="bg-accent dark:bg-blue-900 text-white px-5 py-2 rounded-lg font-bold shadow hover:bg-green-700 transition-colors">Share</button>
+          <button
+            id="download"
+            class="bg-blue-800 dark:bg-accent text-white px-5 py-2 rounded-lg font-bold shadow hover:bg-blue-900 dark:hover:bg-green-700 transition-colors"
+          >
+            Download Certificate
+          </button>
+          <button
+            id="share"
+            class="bg-accent dark:bg-blue-900 text-white px-5 py-2 rounded-lg font-bold shadow hover:bg-green-700 transition-colors"
+          >
+            Share
+          </button>
         </div>
       </div>
       <!-- Standards Info Cards -->
       <div class="flex flex-col gap-4">
-        <div class="bg-white dark:bg-carddark border-l-4 border-accent dark:border-blue-400 rounded-xl shadow-sm px-7 py-4 flex gap-5 items-center">
+        <div
+          class="bg-white dark:bg-carddark border-l-4 border-accent dark:border-blue-400 rounded-xl shadow-sm px-7 py-4 flex gap-5 items-center"
+        >
           <span class="font-bold text-accent dark:text-blue-400 text-base">EU</span>
           <div>
             <span class="font-bold text-accent dark:text-blue-400 ">EU/ISO 21640:2021</span>
-            <p class="text-gray-800 dark:text-gray-200 text-sm mb-1">Solid Recovered Fuels(<b>SRF</b>) follow <a href="https://www.iso.org/obp/ui/en/#!iso:std:72167:en" target="_blank" class="font-bold underline text-accent dark:text-blue-200">ISO 21640:2021</a> for waste-to-energy.</p>
-            <span class="bg-accent/10 dark:bg-blue-400/10 px-2 rounded-full text-accent dark:text-blue-400 font-semibold text-xs">Waste to Energy</span>
+            <p class="text-gray-800 dark:text-gray-200 text-sm mb-1">
+              Solid Recovered Fuels(<b>SRF</b>) follow
+              <a
+                href="https://www.iso.org/obp/ui/en/#!iso:std:72167:en"
+                target="_blank"
+                class="font-bold underline text-accent dark:text-blue-200"
+                >ISO 21640:2021</a
+              >
+              for waste-to-energy.
+            </p>
+            <span
+              class="bg-accent/10 dark:bg-blue-400/10 px-2 rounded-full text-accent dark:text-blue-400 font-semibold text-xs"
+              >Waste to Energy</span
+            >
           </div>
         </div>
-        <div class="bg-white dark:bg-carddark border-l-4 border-blue-800 dark:border-blue-400 rounded-xl shadow-sm px-7 py-4 flex gap-5 items-center">
+        <div
+          class="bg-white dark:bg-carddark border-l-4 border-blue-800 dark:border-blue-400 rounded-xl shadow-sm px-7 py-4 flex gap-5 items-center"
+        >
           <span class="font-bold text-blue-700 dark:text-blue-400 text-base">US</span>
           <div>
             <span class="font-bold text-blue-800 dark:text-blue-400">ASTM E856-83 (RDF)</span>
             <p class="text-gray-800 dark:text-gray-200 text-sm mb-1">
-              <a href="https://www.astm.org/e0856-23a.html" target="_blank" class="font-bold underline text-blue-800 dark:text-blue-200">ASTM E856–83</a> classifies RDF from coarse to fine.
+              <a
+                href="https://www.astm.org/e0856-23a.html"
+                target="_blank"
+                class="font-bold underline text-blue-800 dark:text-blue-200"
+                >ASTM E856–83</a
+              >
+              classifies RDF from coarse to fine.
             </p>
-            <span class="bg-blue-800/10 dark:bg-blue-400/10 px-2 rounded-full text-blue-700 dark:text-blue-400 font-semibold text-xs">Category-based</span>
+            <span
+              class="bg-blue-800/10 dark:bg-blue-400/10 px-2 rounded-full text-blue-700 dark:text-blue-400 font-semibold text-xs"
+              >Category-based</span
+            >
           </div>
         </div>
-        <div class="bg-white dark:bg-carddark border-l-4 border-green-800 dark:border-blue-400 rounded-xl shadow-sm px-7 py-4 flex gap-5 items-center">
+        <div
+          class="bg-white dark:bg-carddark border-l-4 border-green-800 dark:border-blue-400 rounded-xl shadow-sm px-7 py-4 flex gap-5 items-center"
+        >
           <span class="font-bold text-green-800 dark:text-blue-400 text-base">IN</span>
           <div>
             <span class="font-bold text-green-800 dark:text-blue-400">SWM Rules 2016 & CPCB</span>
             <p class="text-gray-800 dark:text-gray-200 text-sm mb-1">
-              <a href="https://cpcb.nic.in/rules/" target="_blank" class="font-bold underline text-green-800 dark:text-blue-200">Solid Waste Management Rules</a> & <a href="https://cpcb.nic.in/" class="font-bold underline text-green-800 dark:text-blue-200" target="_blank">CPCB</a>: strict RDF quality in India.
+              <a href="https://cpcb.nic.in/rules/" target="_blank" class="font-bold underline text-green-800 dark:text-blue-200"
+                >Solid Waste Management Rules</a
+              >
+              &
+              <a href="https://cpcb.nic.in/" class="font-bold underline text-green-800 dark:text-blue-200" target="_blank"
+                >CPCB</a
+              >
+              : strict RDF quality in India.
             </p>
-            <span class="bg-green-700/10 dark:bg-blue-400/10 px-2 rounded-full text-green-800 dark:text-blue-400 font-semibold text-xs">National Compliance</span>
+            <span
+              class="bg-green-700/10 dark:bg-blue-400/10 px-2 rounded-full text-green-800 dark:text-blue-400 font-semibold text-xs"
+              >National Compliance</span
+            >
           </div>
         </div>
       </div>
     </section>
   </main>
-  <footer class="w-full px-8 py-5 bg-white dark:bg-carddark border-t border-gray-200 dark:border-blue-900 flex flex-row items-center justify-between font-semibold text-accent dark:text-blue-400 rounded-t-lg">
+  <footer
+    class="w-full px-8 py-5 bg-white dark:bg-carddark border-t border-gray-200 dark:border-blue-900 flex flex-row items-center justify-between font-semibold text-accent dark:text-blue-400 rounded-t-lg"
+  >
     <span>© Waste2Worth 2025 • AI for Circular Economy</span>
     <span class="opacity-80">Professional B2B Solution</span>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script>
     // Toggle theme
-    const toggleModeBtn = document.getElementById('toggle-mode');
-    const modeIcon = document.getElementById('mode-icon');
+    const toggleModeBtn = document.getElementById("toggle-mode");
+    const modeIcon = document.getElementById("mode-icon");
     let darkMode = false;
     toggleModeBtn.onclick = () => {
       darkMode = !darkMode;
-      document.documentElement.classList.toggle('dark', darkMode);
+      document.documentElement.classList.toggle("dark", darkMode);
       modeIcon.innerHTML = darkMode
         ? '<svg viewBox="0 0 32 32" width="24" height="24" fill="#2563eb"><circle cx="16" cy="16" r="12"/><path d="M14 4a1 1 0 0 0 1 1v21a1 1 0 1 0 0 2c8 0 14-7 14-14a14 14 0 0 0-15-14z"/></svg>'
         : '<svg viewBox="0 0 32 32" width="24" height="24" fill="#22c55e"><circle cx="16" cy="16" r="7"/></svg>';
     };
 
     // File upload & scanning
-    const imginput = document.getElementById('imginput');
-    const imgprev = document.getElementById('imgprev');
-    const scanBtn = document.getElementById('do-scan');
-    const scanText = document.getElementById('scan-btn-text');
-    const scanSpinner = document.getElementById('scan-spinner');
-    const errorBox = document.getElementById('error');
-    const resultBlock = document.getElementById('result-block');
-    const wasteTypeInput = document.getElementById('waste-type');
-    const certIssuedFor = document.getElementById('cert-issuedfor');
-    const reset = document.getElementById('reset');
-    const downloadBtn = document.getElementById('download');
-    const shareBtn = document.getElementById('share');
-    const uploadLabel = document.getElementById('upload-label');
+    const imginput = document.getElementById("imginput");
+    const imgprev = document.getElementById("imgprev");
+    const scanBtn = document.getElementById("do-scan");
+    const scanText = document.getElementById("scan-btn-text");
+    const scanSpinner = document.getElementById("scan-spinner");
+    const errorBox = document.getElementById("error");
+    const resultBlock = document.getElementById("result-block");
+    const wasteTypeInput = document.getElementById("waste-type");
+    const certIssuedFor = document.getElementById("cert-issuedfor");
+    const reset = document.getElementById("reset");
+    const downloadBtn = document.getElementById("download");
+    const shareBtn = document.getElementById("share");
+    const uploadLabel = document.getElementById("upload-label");
+
     uploadLabel.onclick = (e) => {
       if (e.target === imginput) return;
       imginput.click();
     };
+
     imginput.onchange = () => {
-      resultBlock.classList.add('hidden');
-      errorBox.classList.add('hidden');
-      scanBtn.classList.add('hidden');
-      scanSpinner.classList.add('hidden');
+      resultBlock.classList.add("hidden");
+      errorBox.classList.add("hidden");
+      scanBtn.classList.add("hidden");
+      scanSpinner.classList.add("hidden");
       if (imginput.files[0]) {
-        imgprev.classList.remove('hidden');
+        imgprev.classList.remove("hidden");
         imgprev.src = URL.createObjectURL(imginput.files[0]);
-        scanBtn.classList.remove('hidden');
+        scanBtn.classList.remove("hidden");
       } else {
-        imgprev.classList.add('hidden');
-        scanBtn.classList.add('hidden');
+        imgprev.classList.add("hidden");
+        scanBtn.classList.add("hidden");
       }
     };
 
-    // Sync issued for and waste type fields
-    wasteTypeInput.oninput = () => {
-      certIssuedFor.value = wasteTypeInput.value;
-    };
-    certIssuedFor.oninput = () => {
-      wasteTypeInput.value = certIssuedFor.value;
-    };
-
     scanBtn.onclick = () => {
-      errorBox.classList.add('hidden');
-      resultBlock.classList.add('hidden');
-      scanSpinner.classList.remove('hidden');
+      errorBox.classList.add("hidden");
+      resultBlock.classList.add("hidden");
+      scanSpinner.classList.remove("hidden");
       scanBtn.disabled = true;
-      let progress = ["Analyzing Moisture...","Checking Calorific Value...","Verifying Chlorine...","Finalizing Results..."];
+      let progress = [
+        "Analyzing Moisture...",
+        "Checking Calorific Value...",
+        "Verifying Chlorine...",
+        "Finalizing Results...",
+      ];
       let step = 0;
       scanText.textContent = progress[step];
-      let intvl = setInterval(()=>{step=(step+1)%progress.length; scanText.textContent=progress[step];},400);
+      let intvl = setInterval(() => {
+        step = (step + 1) % progress.length;
+        scanText.textContent = progress[step];
+      }, 400);
       setTimeout(() => {
         clearInterval(intvl);
-        scanSpinner.classList.add('hidden');
+        scanSpinner.classList.add("hidden");
         scanText.textContent = "Scan Waste";
         scanBtn.disabled = false;
         const name = imginput.files[0]?.name.toLowerCase() || "";
@@ -235,30 +330,42 @@
         if (/film/.test(name)) typ = "Film Plastic Waste";
         if (/mixed/.test(name)) typ = "Mixed Waste";
         if (/paper/.test(name)) typ = "Paper Waste";
+
         wasteTypeInput.value = typ;
-        certIssuedFor.value = typ; // Sync "Issued for" to detected type
+        // Made certIssuedFor independent, not synced with wasteTypeInput here
 
         if (isWaste) {
-          document.getElementById('cert-date').textContent = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString().slice(0,5);
-          document.getElementById('cert-id').textContent = 'WW-' + Math.floor(100000 + Math.random() * 899999);
-          document.getElementById('cert-quality').textContent =
-            typ === "Plastic Waste (RDF)" ? "Plastic waste meets RDF standards"
-            : typ === "Biomass Waste (SRF)" ? "Biomass fraction meets SRF standards"
-            : typ === "Film Plastic Waste" ? "Film plastic verified for RDF"
-            : typ === "Mixed Waste" ? "Composite waste meets RDF quality"
-            : typ === "Paper Waste" ? "Paper detected for RDF"
-            : "Complies with RDF Fuel Standard (SRF/RDF)";
-          document.getElementById('cert-contents').innerHTML =
-            typ === "Plastic Waste (RDF)" ? "<li>Plastics (main fraction)</li><li>Possible polymer types</li><li>Compliant moisture & calorific</li>"
-            : typ === "Biomass Waste (SRF)" ? "<li>Biomass (compostable fraction)</li><li>Moisture, calorific value</li>"
-            : typ === "Film Plastic Waste" ? "<li>Film plastics</li><li>Calorific/ash analysis</li>"
-            : typ === "Mixed Waste" ? "<li>Plastic, biomass, paper detected</li><li>Composite waste</li>"
-            : typ === "Paper Waste" ? "<li>Paper fraction</li>"
-            : "<li>Generic RDF content</li>";
-          resultBlock.classList.remove('hidden');
+          document.getElementById("cert-date").textContent =
+            new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString().slice(0, 5);
+          document.getElementById("cert-id").textContent = "WW-" + Math.floor(100000 + Math.random() * 899999);
+          document.getElementById("cert-quality").textContent =
+            typ === "Plastic Waste (RDF)"
+              ? "Plastic waste meets RDF standards"
+              : typ === "Biomass Waste (SRF)"
+              ? "Biomass fraction meets SRF standards"
+              : typ === "Film Plastic Waste"
+              ? "Film plastic verified for RDF"
+              : typ === "Mixed Waste"
+              ? "Composite waste meets RDF quality"
+              : typ === "Paper Waste"
+              ? "Paper detected for RDF"
+              : "Complies with RDF Fuel Standard (SRF/RDF)";
+          document.getElementById("cert-contents").innerHTML =
+            typ === "Plastic Waste (RDF)"
+              ? "<li>Plastics (main fraction)</li><li>Possible polymer types</li><li>Compliant moisture & calorific</li>"
+              : typ === "Biomass Waste (SRF)"
+              ? "<li>Biomass (compostable fraction)</li><li>Moisture, calorific value</li>"
+              : typ === "Film Plastic Waste"
+              ? "<li>Film plastics</li><li>Calorific/ash analysis</li>"
+              : typ === "Mixed Waste"
+              ? "<li>Plastic, biomass, paper detected</li><li>Composite waste</li>"
+              : typ === "Paper Waste"
+              ? "<li>Paper fraction</li>"
+              : "<li>Generic RDF content</li>";
+          resultBlock.classList.remove("hidden");
         } else {
-          resultBlock.classList.add('hidden');
-          errorBox.classList.remove('hidden');
+          resultBlock.classList.add("hidden");
+          errorBox.classList.remove("hidden");
           errorBox.textContent = "❌ Please upload a garbage, RDF or waste image only.";
         }
       }, 1600);
@@ -266,35 +373,35 @@
 
     reset.onclick = () => {
       imginput.value = "";
-      imgprev.classList.add('hidden');
-      scanBtn.classList.add('hidden');
-      resultBlock.classList.add('hidden');
-      errorBox.classList.add('hidden');
-      scanSpinner.classList.add('hidden');
+      imgprev.classList.add("hidden");
+      scanBtn.classList.add("hidden");
+      resultBlock.classList.add("hidden");
+      errorBox.classList.add("hidden");
+      scanSpinner.classList.add("hidden");
       wasteTypeInput.value = "Unknown Waste";
       certIssuedFor.value = "Unknown Waste";
     };
 
     downloadBtn.onclick = () => {
-      html2canvas(resultBlock).then(canvas => {
-        let link = document.createElement('a');
+      html2canvas(resultBlock).then((canvas) => {
+        let link = document.createElement("a");
         link.download = "Waste2Worth_Certificate.png";
         link.href = canvas.toDataURL();
         link.click();
       });
     };
     shareBtn.onclick = () => {
-      html2canvas(resultBlock).then(canvas => {
-        canvas.toBlob(blob => {
-          const file = new File([blob], "Waste2Worth_Certificate.png", { type:"image/png" });
+      html2canvas(resultBlock).then((canvas) => {
+        canvas.toBlob((blob) => {
+          const file = new File([blob], "Waste2Worth_Certificate.png", { type: "image/png" });
           if (navigator.canShare && navigator.canShare({ files: [file] })) {
             navigator.share({
               files: [file],
-              title: 'Waste2Worth Certificate',
-              text: 'My RDF Waste was verified as high quality! #CircularEconomy #WasteToWorth'
+              title: "Waste2Worth Certificate",
+              text: "My RDF Waste was verified as high quality! #CircularEconomy #WasteToWorth",
             });
           } else {
-            alert('Social sharing is not supported on this browser. Please download and share manually.');
+            alert("Social sharing is not supported on this browser. Please download and share manually.");
           }
         });
       });
