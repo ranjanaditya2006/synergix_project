@@ -17,6 +17,31 @@
       --card-bg:rgba(255,255,255,0.96);
     }
 
+    /* Dark theme variables — switched when document.documentElement has .dark */
+    
+  :root.dark {
+    --accent:#22c55e;
+    --muted:#9ca3af;
+
+    /* Cards and panels */
+    --card-bg:#031533;
+
+    /* Page */
+    --page-bg: linear-gradient(180deg,#0b1220 0%, #0f172a 100%);
+
+    /* Navbar */
+    --nav-bg: rgba(15,23,42,0.85);
+
+    /* Text */
+    --text-primary: #aa0aea;
+    --text-secondary: #0fe0ef;
+
+    /* Borders */
+    --border: rgba(4, 159, 77, 0.12);
+
+
+    }
+
     /* Layout + theme */
     html,body { overflow-x: hidden; }
     body {
@@ -26,14 +51,25 @@
       -moz-osx-font-smoothing:grayscale;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
+    /* when dark class is present we override page styles */
+    html.dark body {
+      background: var(--page-bg);
+      color: var(--text-primary);
+    }
+
     main { padding-top:4.5rem; } /* header height */
 
     /* cards / panels */
     .card { background:var(--card-bg); border:1px solid rgba(15,23,42,0.04); box-shadow:0 6px 20px rgba(12,18,24,0.06); }
+    html.dark .card { border: var(--border); box-shadow: none; }
     .side-panel { background:white; border:1px solid rgba(15,23,42,0.04); box-shadow:0 6px 18px rgba(12,18,24,0.04); }
+    html.dark .side-panel { background: rgba(30,41,59,0.8); border: var(--border); box-shadow: none; }
     .pill { background: rgba(22,163,74,0.12); color:var(--accent); padding:4px 8px; border-radius:9999px; font-weight:600; font-size:12px; }
     .btn-primary { background:var(--accent); color:white; }
     .btn-ghost { background:transparent; border:1px solid rgba(15,23,42,0.06); }
+    html.dark .btn-primary { background:#16a34a; color:white; }
+    html.dark .btn-ghost { border: var(--border); color:var(--text-primary); }
+
     .card-img { height:160px; object-fit:cover; border-radius:8px; width:100%; display:block; }
 
     /* Overlay / filter styling */
@@ -41,6 +77,7 @@
     .overlay { position:fixed; inset:0; z-index:9991; display:none; overflow-y:auto; -webkit-overflow-scrolling:touch; }
     .overlay.open, .overlay-backdrop.open { display:block; }
     .overlay .panel { background:white; max-width:760px; margin:3.5rem auto; border-radius:12px; padding:1.25rem; box-shadow:0 20px 40px rgba(2,6,23,0.2); }
+    html.dark .overlay .panel { background: rgba(15,23,42,0.9); box-shadow: none; border: var(--border); }
     .overlay .panel .inner { max-height:calc(100vh - 12rem); overflow-y:auto; padding-right:0.25rem; }
 
     /* Modal animation */
@@ -48,11 +85,27 @@
     .modal { position:fixed; left:50%; top:50%; transform:translate(-50%, -50%) translateY(12px) scale(.98); opacity:0; transition: transform .33s cubic-bezier(.2,.9,.2,1), opacity .28s ease; z-index:9999; display:none; }
     .modal.open { display:block; transform:translate(-50%, -50%) translateY(0) scale(1); opacity:1; }
     .modal-inner { background:white; border-radius:10px; box-shadow:0 18px 40px rgba(2,6,23,0.25); max-width:920px; width:100%; overflow:hidden; }
+    html.dark .modal-inner { background: rgba(15,23,42,0.95); box-shadow: none; border: var(--border); }
 
     /* responsive helpers */
     .hidden-on-desktop { display:inline-block; }
     @media(min-width:1024px){ .hidden-on-desktop{ display:none; } }
-    
+
+    /* Theme toggle button specific */
+    .theme-toggle {
+      width:36px; height:36px; border-radius:10px;
+      display:inline-flex; align-items:center; justify-content:center;
+      cursor:pointer; border:1px solid rgba(15,23,42,0.06); background:rgba(236,253,245,0.8);
+      transition: transform .12s ease, background .2s ease, border-color .15s;
+      padding:4px;
+    }
+    .theme-toggle:active { transform: scale(.98); }
+    html.dark .theme-toggle {
+      background: rgba(6,10,18,0.6);
+      border: var(--border);
+    }
+    .theme-toggle img, .theme-toggle svg { width:22px; height:22px; display:block; }
+    .theme-toggle[aria-pressed="true"] { box-shadow: 0 6px 20px rgba(2,6,23,0.12); }
   </style>
 </head>
 <body class="antialiased">
@@ -62,7 +115,7 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
       <div class="flex items-center gap-3">
-<img class="w-9 h-9 rounded-full bg-green-600 font-bold" src="logos.png" alt="Waste2Worth Logo" />
+        <img class="w-9 h-9 rounded-full bg-green-600 font-bold" src="logos.png" alt="Waste2Worth Logo" />
         <div class="hidden sm:block">
           <a href="index.html" id="brandText" class="text-lg font-semibold text-slate-800 leading-none">Waste2Worth</a><br>
           <small class="text-xs text-slate-500">B2B Circular Marketplace</small>
@@ -83,6 +136,13 @@
         <div class="hidden lg:flex items-center gap-3">
           <a href="buy.html" class="px-3 py-2 rounded-md text-sm btn-ghost">Sell Waste</a>
           <a href="buy.html" class="px-3 py-2 rounded-md text-sm btn-ghost">Buy</a>
+
+          <!-- THEME TOGGLE BUTTON (added as requested: navbar top-right) -->
+          <button id="themeToggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle theme" title="Toggle light / dark">
+          <img id="themeIcon" src="https://img.icons8.com/ios-filled/50/moon-symbol.png" alt="theme icon">
+          </button>
+
+
           <a href="#" class="px-4 py-2 rounded-md text-sm btn-primary hover:opacity-95">Login</a>
           <a href="dashboard.html" class="ml-3 px-3 py-2 rounded-md text-sm border border-gray-100 bg-white">Dashboard</a>
         </div>
@@ -354,6 +414,76 @@
      JavaScript: data, rendering, filters and interactions
      --------------------------- -->
 <script>
+// THEME TOGGLE: apply on load and save to localStorage
+(function() {
+  const STORAGE_KEY = 'w2w_theme'; // 'light' or 'dark'
+  const root = document.documentElement;
+  const toggleBtn = document.getElementById('themeToggle');
+  const iconEl = document.getElementById('themeIcon');
+
+  // Sun SVG used for dark mode display (inlined)
+  const SUN_SVG = `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M12 4V2M12 22v-2M4 12H2M22 12h-2M5.64 5.64L4.22 4.22M19.78 19.78l-1.42-1.42M19.78 4.22l-1.42 1.42M5.64 18.36l-1.42 1.42M12 8a4 4 0 100 8 4 4 0 000-8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+
+  const MOON_IMG_SRC = "/mnt/data/38c682e5-3611-4ab8-a5b6-080298a8fae7.png";
+
+  function applyTheme(theme) {
+    if(theme === 'dark') {
+      root.classList.add('dark');
+      // set navbar styling (the existing navbar uses inline bg; override as needed)
+      document.querySelectorAll('nav, .overlay .panel, .modal-inner, footer').forEach(el=>{
+        // nothing heavy here — dark mode largely handled by CSS variables
+      });
+      // change toggle icon to sun (SVG)
+      toggleBtn.setAttribute('aria-pressed','true');
+      // insert SVG (ensure element is SVG or IMG is replaced)
+      iconEl.insertAdjacentHTML('afterend', SUN_SVG);
+      iconEl.style.display = 'none';
+      // remove previous inline svg if any duplicates
+      const prevSvgs = toggleBtn.querySelectorAll('svg');
+      if(prevSvgs.length > 1) {
+        prevSvgs[0].remove();
+      }
+      localStorage.setItem(STORAGE_KEY, 'dark');
+    } else {
+      root.classList.remove('dark');
+      toggleBtn.setAttribute('aria-pressed','false');
+      // show moon image
+      iconEl.style.display = '';
+      // remove any inline SVGs inside button
+      const svgs = toggleBtn.querySelectorAll('svg');
+      svgs.forEach(s => s.remove());
+      localStorage.setItem(STORAGE_KEY, 'light');
+    }
+    // ensure accessible label updated
+    toggleBtn.title = (theme === 'dark') ? 'Switch to light mode' : 'Switch to dark mode';
+    toggleBtn.setAttribute('aria-label', toggleBtn.title);
+  }
+
+  // initial read (prefer explicit localStorage, fallback to prefers-color-scheme)
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(saved) {
+    applyTheme(saved);
+  } else {
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(prefersDark ? 'dark' : 'light');
+  }
+
+  // click handler
+  toggleBtn.addEventListener('click', function() {
+    const isDark = document.documentElement.classList.contains('dark');
+    applyTheme(isDark ? 'light' : 'dark');
+  });
+
+  // keyboard support: Enter / Space toggle
+  toggleBtn.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault(); toggleBtn.click();
+    }
+  });
+})();
+
 // --- RDF-specific waste options requested by user (keeps exact labels) ---
 const MATERIALS = [
   "Plastic Waste (for RDF)",
@@ -372,17 +502,141 @@ const MATERIALS = [
 // Sample listings updated to use RDF options and images matching type (Unsplash queries).
 // Only images and material labels changed per your request; other behaviour unchanged.
 const LISTINGS = [
-  {id:1, title:"Mixed Film Plastic Bales", material:"Film Plastic Waste", qty:1200, price:18, city:"Delhi", state:"Delhi", verified:true, available:"in", age:2, dist:12, img:"https://images.unsplash.com/photo-1581579184736-3f6e7b2fc64f?q=80"},
-  {id:2, title:"Cardboard Reject Bundles", material:"Cardboard Reject", qty:500, price:12, city:"Mumbai", state:"Maharashtra", verified:true, available:"in", age:5, dist:60, img:"https://images.unsplash.com/photo-1503602642458-232111445657?q=80"},
-  {id:3, title:"Hard Plastic Pellets (reclaim)", material:"Hard Plastic Waste", qty:2400, price:20, city:"Pune", state:"Maharashtra", verified:false, available:"in", age:7, dist:90, img:"https://images.unsplash.com/photo-1585386959984-a4155226b7b6?q=80"},
-  {id:4, title:"Plastic Waste for RDF (mixed)", material:"Plastic Waste (for RDF)", qty:800, price:9, city:"Ahmedabad", state:"Gujarat", verified:true, available:"in", age:1, dist:150, img:"https://images.unsplash.com/photo-1597328041442-4a6f8d3e0bf5?q=80"},
-  {id:5, title:"Agricultural Residue (bagged)", material:"Agricultural Residue Waste", qty:2000, price:2, city:"Kolkata", state:"West Bengal", verified:true, available:"in", age:3, dist:160, img:"https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80"},
-  {id:6, title:"Textile Clippings (RDF mix)", material:"Textile Waste", qty:150, price:5, city:"Bengaluru", state:"Karnataka", verified:false, available:"in", age:10, dist:40, img:"https://images.unsplash.com/photo-1591012911209-9e4f5a6a7b8c?q=80"},
-  {id:7, title:"Wood Waste (chipped)", material:"Wood Waste", qty:1800, price:6, city:"Surat", state:"Gujarat", verified:false, available:"in", age:15, dist:110, img:"https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80"},
-  {id:8, title:"Rubber Scrap (shredded)", material:"Rubber Waste", qty:1000, price:8, city:"Chennai", state:"Tamil Nadu", verified:true, available:"in", age:4, dist:320, img:"https://images.unsplash.com/photo-1526403224742-8b8b1f7a7f8b?q=80"},
-  {id:9, title:"Biomass Waste (compostable)", material:"Biomass Waste", qty:6000, price:1, city:"Delhi", state:"Delhi", verified:false, available:"in", age:1, dist:10, img:"https://images.unsplash.com/photo-1544025162-d76694265947?q=80"},
-  {id:10, title:"Paper Waste (RDF quality)", material:"Paper Waste (for RDF)", qty:300, price:10, city:"Hyderabad", state:"Telangana", verified:true, available:"in", age:6, dist:220, img:"https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80"}
+  {
+    id:1,
+    title:"Mixed Film Plastic Bales",
+    material:"Film Plastic Waste",
+    qty:1200,
+    price:18,
+    city:"Delhi",
+    state:"Delhi",
+    verified:true,
+    available:"in",
+    age:2,
+    dist:12,
+    img:"https://polymerinstock.com/cdn/shop/files/BOPP_FILM_BALES_MIX_COLOR_2_1200x1200.jpg"
+  },
+  {
+    id:2,
+    title:"Cardboard Reject Bundles",
+    material:"Cardboard Reject",
+    qty:500,
+    price:12,
+    city:"Mumbai",
+    state:"Maharashtra",
+    verified:true,
+    available:"in",
+    age:5,
+    dist:60,
+    img:"cardboard waste.jpeg"
+  },
+  {
+    id:3,
+    title:"Hard Plastic Pellets (reclaim)",
+    material:"Hard Plastic Waste",
+    qty:2400,
+    price:20,
+    city:"Pune",
+    state:"Maharashtra",
+    verified:false,
+    available:"in",
+    age:7,
+    dist:90,
+    img:"pellets waste.jpeg"
+  },
+  {
+    id:4,
+    title:"Plastic Waste for RDF (mixed)",
+    material:"Plastic Waste (for RDF)",
+    qty:800,
+    price:9,
+    city:"Ahmedabad",
+    state:"Gujarat",
+    verified:true,
+    available:"in",
+    age:1,
+    dist:150,
+    img:"plastic waste.jpeg"
+  },
+  {
+    id:5,
+    title:"Agricultural Residue (bagged)",
+    material:"Agricultural Residue Waste",
+    qty:2000,
+    price:2,
+    city:"Kolkata",
+    state:"West Bengal",
+    verified:true,
+    available:"in",
+    age:3,
+    dist:160,
+    img:"agricultural waste.jpeg"
+  },
+  {
+    id:6,
+    title:"Textile Clippings (RDF mix)", material:"Textile Waste", qty:150, price:5, city:"Bengaluru", state:"Karnataka", verified:false, available:"in", age:10, dist:40,
+    img:"clipping waste.jpeg"
+
+  },
+  {
+    id:7,
+    title:"Wood Waste (chipped)",
+    material:"Wood Waste",
+    qty:1800,
+    price:6,
+    city:"Surat",
+    state:"Gujarat",
+    verified:false,
+    available:"in",
+    age:15,
+    dist:110,
+    img:"https://waste-management-world.com/imager/media/wasteManagementWorld/6498880/AdobeStock_102806221_428fd902f4247199467725e7eccf1673.jpeg"
+  },
+  {
+    id:8,
+    title:"Rubber Scrap (shredded)",
+    material:"Rubber Waste",
+    qty:1000,
+    price:8,
+    city:"Chennai",
+    state:"Tamil Nadu",
+    verified:true,
+    available:"in",
+    age:4,
+    dist:320,
+    img:"https://images.jdmagicbox.com/quickquotes/images_main/natural-rubber-scrap-chips-803348874-po91ww4p.jpg"
+  },
+  {
+    id:9,
+    title:"Biomass Waste (compostable)",
+    material:"Biomass Waste",
+    qty:6000,
+    price:1,
+    city:"Delhi",
+    state:"Delhi",
+    verified:false,
+    available:"in",
+    age:1,
+    dist:10,
+    img:"biomass waste.jpeg"
+  },
+  {
+    id:10,
+    title:"Paper Waste (RDF quality)",
+    material:"Paper Waste (for RDF)",
+    qty:300,
+    price:10,
+    city:"Hyderabad",
+    state:"Telangana",
+    verified:true,
+    available:"in",
+    age:6,
+    dist:220,
+    img:"https://www.front-materials.com/app/uploads/2024/10/front-materials-paper-waste.jpg"
+  }
 ];
+
+
 
 // Pagination
 let currentPage = 1;
@@ -791,9 +1045,7 @@ function clearAllFilters(){
 // Init render
 renderCards(1);
 
-// Defensive pagination
-prevPageBtn.addEventListener('click', ()=> renderCards(currentPage-1));
-nextPageBtn.addEventListener('click', ()=> renderCards(currentPage+1));
+
 
 // --- Small GSAP animations to match Home feel (logo + nav + reveal) ---
 try{
